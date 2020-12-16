@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.m2comm.test.databinding.FragmentSeekBarBinding;
 
 
 public class SeekBarFragment extends Fragment {
+    private String TAG = SeekBarFragment.class.getSimpleName();
 
     public SeekBarFragment() {
         // Required empty public constructor
@@ -41,9 +43,12 @@ public class SeekBarFragment extends Fragment {
         binding.setViewModel(viewModel);
 
         binding.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 viewModel.progress.setValue(progress);
+                Log.d(TAG , progress+"");
             }
 
             @Override
