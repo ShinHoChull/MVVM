@@ -10,26 +10,61 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <fragment
-            android:id="@+id/color_frag"
-            android:name="com.m2comm.test.fragments.ColorFragment"
-            tools:layout="@layout/fragment_color"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            />
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/fragBt1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="button1"
+                android:layout_weight="1"
+                android:onClick="onClick"/>
+            <Button
+                android:id="@+id/fragBt2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="button2"
+                android:layout_weight="1"
+                android:onClick="onClick"/>
+            <Button
+                android:id="@+id/fragBt3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="button3"
+                android:layout_weight="1"
+                android:onClick="onClick"/>
 
-        <FrameLayout
-            android:id="@+id/container"
-            android:layout_width="match_parent"
-            android:layout_height="100dp">
-        </FrameLayout>
+        </LinearLayout>
 
-        <Button
-            android:text="Fragment 변경"
-            android:onClick="onClick"
-            android:id="@+id/fragmentButton"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"/>
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <FrameLayout
+                android:id="@+id/container1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                />
+
+            <FrameLayout
+                android:id="@+id/container2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                />
+
+            <FrameLayout
+                android:id="@+id/container3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                />
+
+        </LinearLayout>
 
 
     </LinearLayout>

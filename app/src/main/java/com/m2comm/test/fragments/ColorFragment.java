@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +18,7 @@ public class ColorFragment extends Fragment {
 
     private static final String TAG = ColorFragment.class.getSimpleName();
     private int mColor = Color.RED;
+    private String mText = "";
     //fragment 생성시 필수
     public ColorFragment() {
     }
@@ -27,8 +29,14 @@ public class ColorFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_color , container, false);
         view.setBackgroundColor(mColor);
+        TextView tv = view.findViewById(R.id.fragText);
+        tv.setText(mText);
 
         return view;
+    }
+
+    public void setText (String text) {
+        this.mText = text;
     }
 
     public void setColor(int color) {

@@ -23,16 +23,6 @@ public class ColorFragmentActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_color_fragment);
 
-        //첫번째 프래그먼트 가져와서 캐스팅 후 백그라운드 조작
-        colorFrag =  (ColorFragment) getSupportFragmentManager().findFragmentById(R.id.color_frag);
-        //colorFrag.setColor(Color.BLUE);
-
-
-        //두번째. 동적 추가.
-        colorFrag2 =  new ColorFragment();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.container , colorFrag2 ).commit();
-
     }
 
     @Override
@@ -45,10 +35,26 @@ public class ColorFragmentActivity extends AppCompatActivity implements View.OnC
 
         ColorFragment newColorFragment = new ColorFragment();
 
+        switch (v.getId()) {
+            case R.id.fragBt1:
+                this.addFragment( R.id.container1 , newColorFragment,"No.1" ,mColor );
+                break;
+
+            case R.id.fragBt2:
+                this.addFragment( R.id.container2 , newColorFragment ,"No.2" ,mColor);
+                break;
+
+            case R.id.fragBt3:
+                this.addFragment( R.id.container3 , newColorFragment ,"No.3" ,mColor);
+                break;
+        }
+
+    }
+
+    private void addFragment (int id , ColorFragment cf , String str , int color) {
         getSupportFragmentManager().beginTransaction().
-                replace(R.id.container , newColorFragment).commit();
-
-        newColorFragment.setColor(mColor);
-
+                replace( id , cf).commit();
+        cf.setText(str);
+        cf.setColor(color );
     }
 }
