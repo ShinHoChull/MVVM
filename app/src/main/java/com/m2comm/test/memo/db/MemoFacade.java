@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.m2comm.test.memo.MemoActivity;
@@ -14,6 +15,7 @@ import java.util.List;
 public class MemoFacade {
     private MemoDbHelper mDbHelper;
     private Context context;
+    private String TAG = MemoFacade.class.getSimpleName();
 
     public MemoFacade(Context context) {
         this.context = context;
@@ -75,6 +77,8 @@ public class MemoFacade {
         if ( cursor != null ) {
 
             while(cursor.moveToNext()) {
+                String id = cursor.getString(cursor.getColumnIndexOrThrow(MemoContract.MemoEntry._ID));
+
                 String title = cursor.getString(
                         cursor.getColumnIndexOrThrow(
                                 MemoContract.MemoEntry.COLUMN_NAME_TITLE));
@@ -83,14 +87,30 @@ public class MemoFacade {
                         cursor.getColumnIndexOrThrow(
                                 MemoContract.MemoEntry.COLUMN_NAME_CONTENT));
 
-                MemoActivity.MemoDTO row = new MemoActivity.MemoDTO(title , cotent);
-
+                MemoActivity.MemoDTO row = new MemoActivity.MemoDTO(id , title , cotent);
                 memoDTOS.add(row);
             }
             cursor.close();
         }
 
         return memoDTOS;
+    }
+
+    /**
+     * 메모 아이템 삭제
+     *
+     * @param id 삭제할 아이템의 아이디값
+     * */
+    public int itemDelete(String id) {
+        Log.d(TAG , id);
+        String selection = MemoContract.MemoEntry._ID + " = ?";
+        String[] selectionArgs = { id };
+
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        return db.delete(MemoContract.MemoEntry.TABLE_NAME,
+                selection,
+                selectionArgs);
+
     }
 
 }

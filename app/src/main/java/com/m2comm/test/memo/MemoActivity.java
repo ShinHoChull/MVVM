@@ -1,10 +1,13 @@
 package com.m2comm.test.memo;
 
 import androidx.annotation.Nullable;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -29,8 +32,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MemoActivity extends AppCompatActivity implements View.OnClickListener ,
-        AdapterView.OnItemClickListener {
+public class MemoActivity extends AppCompatActivity implements View.OnClickListener,
+        AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     private String TAG = MemoActivity.class.getSimpleName();
     public static int MEMO_WRITE_CODE = 1;
@@ -56,14 +59,47 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
         mListview = findViewById(R.id.memo_listview);
         mListview.setAdapter(mAdapter);
         mListview.setOnItemClickListener(this);
+        mListview.setOnItemLongClickListener(this);
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MemoActivity.this);
+        // Add the buttons
+        builder.setMessage(R.string.memo_dialog_message)
+                .setTitle(R.string.memo_dialog_title);
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                MemoDTO memoDTO = mdatas.get(position);
+                //Where문 > ? 값을 selectionArgs 의 순서대로 참조하여 Cursor에 입력이 됨.
+                if ( mMemoFacade.itemDelete(memoDTO.getId()) > 0) {
+                    mdatas = mMemoFacade.getMemoAllList();
+
+                    // TODO notifyDataSetChanged 리스트 갱신이 안되네 ...
+                    mAdapter = new MemoAdapter(mdatas);
+                    mListview.setAdapter(mAdapter);
+                }
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        return true;
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent( this , MemoDetailActivity.class );
+        Intent intent = new Intent(this, MemoDetailActivity.class);
         selectPosition = position;
-        intent.putExtra("data",mdatas.get(position));
-        startActivityForResult(intent , MEMO_MODIFY_CODE);
+        intent.putExtra("data", mdatas.get(position));
+        startActivityForResult(intent, MEMO_MODIFY_CODE);
     }
 
     @Override
@@ -71,8 +107,8 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (v.getId()) {
             case R.id.memo_writeBt:
-                Intent intent = new Intent( this , MemoDetailActivity.class );
-                startActivityForResult(intent , MEMO_WRITE_CODE);
+                Intent intent = new Intent(this, MemoDetailActivity.class);
+                startActivityForResult(intent, MEMO_WRITE_CODE);
                 break;
         }
     }
@@ -80,22 +116,21 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if ( requestCode == MEMO_WRITE_CODE ) {
-            if ( resultCode == RESULT_OK ) {
-                if ( data != null ) {
-                    MemoDTO row = (MemoDTO)data.getSerializableExtra("data");
-                    long newRowId = this.mMemoFacade.insert(row.getTitle() , row.getCotent());
-                    if ( newRowId == -1 ) {
-                        Toast.makeText(this , "sqlite Error" , Toast.LENGTH_SHORT).show();
+        if (requestCode == MEMO_WRITE_CODE) {
+            if (resultCode == RESULT_OK) {
+                if (data != null) {
+                    MemoDTO row = (MemoDTO) data.getSerializableExtra("data");
+                    long newRowId = this.mMemoFacade.insert(row.getTitle(), row.getCotent());
+                    if (newRowId == -1) {
+                        Toast.makeText(this, "sqlite Error", Toast.LENGTH_SHORT).show();
                     } else {
                         mdatas = this.mMemoFacade.getMemoAllList();
-
                     }
                 }
             }
-        } else if ( requestCode == MEMO_MODIFY_CODE ) {
-            if ( resultCode == RESULT_OK ) {
-                if ( data != null ) {
+        } else if (requestCode == MEMO_MODIFY_CODE) {
+            if (resultCode == RESULT_OK) {
+                if (data != null) {
                     MemoDTO row = (MemoDTO) data.getSerializableExtra("data");
                     mdatas.get(selectPosition).setTitle(row.getTitle());
                     mdatas.get(selectPosition).setCotent(row.getCotent());
@@ -104,14 +139,14 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
         }
         // TODO notifyDataSetChanged 리스트 갱신이 안되네 ...
         mAdapter = new MemoAdapter(mdatas);
-        mAdapter.notifyDataSetChanged();
+        mListview.setAdapter(mAdapter);
     }
 
     public static class MemoAdapter extends BaseAdapter {
 
         private List<MemoDTO> mdatas;
 
-        public MemoAdapter(List<MemoDTO> mdatas ) {
+        public MemoAdapter(List<MemoDTO> mdatas) {
             this.mdatas = mdatas;
         }
 
@@ -135,16 +170,16 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
 
             ViewHodel viewHodel;
 
-            if ( convertView == null ) {
+            if (convertView == null) {
                 viewHodel = new ViewHodel();
                 convertView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.item_text, parent , false);
+                        .inflate(R.layout.item_text, parent, false);
 
                 viewHodel.title = convertView.findViewById(R.id.fragTextview);
                 viewHodel.content = convertView.findViewById(R.id.memo_content);
                 convertView.setTag(viewHodel);
             } else {
-                viewHodel = (ViewHodel)convertView.getTag();
+                viewHodel = (ViewHodel) convertView.getTag();
             }
 
             MemoDTO row = mdatas.get(position);
@@ -162,12 +197,22 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public static class MemoDTO implements Serializable {
+        String id;
         String title;
         String cotent;
 
-        public MemoDTO(String title, String cotent) {
+        public MemoDTO(String id, String title, String cotent) {
+            this.id = id;
             this.title = title;
             this.cotent = cotent;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getId() {
+            return id;
         }
 
         public String getTitle() {
