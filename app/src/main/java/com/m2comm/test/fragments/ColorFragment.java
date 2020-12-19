@@ -24,12 +24,8 @@ public class ColorFragment extends Fragment {
     }
 
     public static ColorFragment newInstance(int color) {
-
-        Bundle args = new Bundle();
-
         ColorFragment fragment = new ColorFragment();
         fragment.setColor(color);
-        fragment.setArguments(args);
         return fragment;
     }
 
