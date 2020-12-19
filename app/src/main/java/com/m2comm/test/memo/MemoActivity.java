@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import com.m2comm.test.R;
 import com.m2comm.test.memo.db.MemoContract;
 import com.m2comm.test.memo.db.MemoDbHelper;
+import com.m2comm.test.memo.db.MemoFacade;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -37,17 +39,19 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
     private ListView mListview;
     private MemoAdapter mAdapter;
     private List<MemoDTO> mdatas;
+    private MemoFacade mMemoFacade;
 
-    private MemoDbHelper mDbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo);
 
-        this.mDbHelper = new MemoDbHelper(this);
         this.mdatas = new ArrayList<>();
+        this.mMemoFacade = new MemoFacade(this);
 
         //DB에서 읽어오기
+        this.mdatas = this.mMemoFacade.getMemoAllList();
+
         mAdapter = new MemoAdapter(this.mdatas);
         mListview = findViewById(R.id.memo_listview);
         mListview.setAdapter(mAdapter);
@@ -80,18 +84,12 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
             if ( resultCode == RESULT_OK ) {
                 if ( data != null ) {
                     MemoDTO row = (MemoDTO)data.getSerializableExtra("data");
-                    mdatas.add(0,row);
-
-                    //gets the data repository in write mode
-                    SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
-                    ContentValues values = new ContentValues();
-                    values.put(MemoContract.MemoEntry.COLUMN_NAME_TITLE ,row.getTitle());
-                    values.put(MemoContract.MemoEntry.COLUMN_NAME_CONTENT ,row.getCotent());
-
-                    long newRowId = db.insert(MemoContract.MemoEntry.TABLE_NAME , null , values);
+                    long newRowId = this.mMemoFacade.insert(row.getTitle() , row.getCotent());
                     if ( newRowId == -1 ) {
                         Toast.makeText(this , "sqlite Error" , Toast.LENGTH_SHORT).show();
+                    } else {
+                        mdatas = this.mMemoFacade.getMemoAllList();
+
                     }
                 }
             }
@@ -101,12 +99,12 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
                     MemoDTO row = (MemoDTO) data.getSerializableExtra("data");
                     mdatas.get(selectPosition).setTitle(row.getTitle());
                     mdatas.get(selectPosition).setCotent(row.getCotent());
-
                 }
             }
         }
+        // TODO notifyDataSetChanged 리스트 갱신이 안되네 ...
+        mAdapter = new MemoAdapter(mdatas);
         mAdapter.notifyDataSetChanged();
-
     }
 
     public static class MemoAdapter extends BaseAdapter {
