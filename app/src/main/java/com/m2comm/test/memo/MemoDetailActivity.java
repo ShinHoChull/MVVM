@@ -45,7 +45,9 @@ public class MemoDetailActivity extends AppCompatActivity implements View.OnClic
                     return;
                 }
 
-                mdata = new MemoActivity.MemoDTO("",title.getText().toString(),
+                mdata = new MemoActivity.MemoDTO (
+                        mdata == null ? "" : mdata.getId(),
+                        title.getText().toString(),
                         content.getText().toString());
 
                 Intent intent = getIntent();

@@ -77,7 +77,9 @@ public class MemoFacade {
         if ( cursor != null ) {
 
             while(cursor.moveToNext()) {
-                String id = cursor.getString(cursor.getColumnIndexOrThrow(MemoContract.MemoEntry._ID));
+                String id = cursor.getString(
+                        cursor.getColumnIndexOrThrow(
+                                MemoContract.MemoEntry._ID));
 
                 String title = cursor.getString(
                         cursor.getColumnIndexOrThrow(
@@ -96,6 +98,26 @@ public class MemoFacade {
         return memoDTOS;
     }
 
+    public int itemUpdate(String id , String title , String content ) {
+
+        // New value for one column
+        ContentValues values = new ContentValues();
+        values.put(MemoContract.MemoEntry.COLUMN_NAME_TITLE, title);
+        values.put(MemoContract.MemoEntry.COLUMN_NAME_CONTENT, content);
+
+        // Which row to update, based on the title
+        String selection = MemoContract.MemoEntry._ID + " = ?";
+        String[] selectionArgs = { id };
+
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        return  db.update(
+                MemoContract.MemoEntry.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs);
+
+    }
+
     /**
      * 메모 아이템 삭제
      *
@@ -111,6 +133,10 @@ public class MemoFacade {
                 selection,
                 selectionArgs);
 
+    }
+
+    public void close() {
+        this.mDbHelper.close();
     }
 
 }

@@ -114,6 +114,12 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    protected void onDestroy() {
+        this.mMemoFacade.close();
+        super.onDestroy();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == MEMO_WRITE_CODE) {
@@ -132,8 +138,9 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
             if (resultCode == RESULT_OK) {
                 if (data != null) {
                     MemoDTO row = (MemoDTO) data.getSerializableExtra("data");
-                    mdatas.get(selectPosition).setTitle(row.getTitle());
-                    mdatas.get(selectPosition).setCotent(row.getCotent());
+                    if ( mMemoFacade.itemUpdate(row.getId() , row.getTitle() , row.getCotent()) > 0 ) {
+                        mdatas = this.mMemoFacade.getMemoAllList();
+                    }
                 }
             }
         }
