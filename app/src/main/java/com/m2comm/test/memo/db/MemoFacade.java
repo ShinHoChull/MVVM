@@ -98,6 +98,13 @@ public class MemoFacade {
         return memoDTOS;
     }
 
+    /**
+     * 메모 수정하기
+     *
+     * @param id 메모 저장 아이디
+     * @param title 메모 제목
+     * @param content 메모 내용
+     * */
     public int itemUpdate(String id , String title , String content ) {
 
         // New value for one column
