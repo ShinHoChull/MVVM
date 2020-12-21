@@ -27,20 +27,22 @@ import com.m2comm.test.memo.db.MemoContract;
 import com.m2comm.test.memo.db.MemoDbHelper;
 import com.m2comm.test.memo.db.MemoFacade;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MemoActivity extends AppCompatActivity implements View.OnClickListener,
-        AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public class MemoActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String TAG = MemoActivity.class.getSimpleName();
     public static int MEMO_WRITE_CODE = 1;
     public static int MEMO_MODIFY_CODE = 2;
-    private int selectPosition = -1;
-    private ListView mListview;
-    private MemoAdapter mAdapter;
+    private RecyclerView mListview;
+    private MemoRecyclerAdapter memoRecyclerAdapter;
     private List<MemoDTO> mdatas;
     private MemoFacade mMemoFacade;
 
@@ -52,18 +54,28 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
         this.mdatas = new ArrayList<>();
         this.mMemoFacade = new MemoFacade(this);
 
+        mListview = findViewById(R.id.memo_listview);
         //DB에서 읽어오기
         this.mdatas = this.mMemoFacade.getMemoAllList();
 
-        mAdapter = new MemoAdapter(this.mdatas);
-        mListview = findViewById(R.id.memo_listview);
-        mListview.setAdapter(mAdapter);
-        mListview.setOnItemClickListener(this);
-        mListview.setOnItemLongClickListener(this);
+        memoRecyclerAdapter = new MemoRecyclerAdapter(this.mdatas);
+        mListview.setAdapter(memoRecyclerAdapter);
     }
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onItemLongClick(final MemoRecyclerAdapter.ItemLongClickEvent event) {
         AlertDialog.Builder builder = new AlertDialog.Builder(MemoActivity.this);
         // Add the buttons
         builder.setMessage(R.string.memo_dialog_message)
@@ -71,14 +83,13 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
 
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                MemoDTO memoDTO = mdatas.get(position);
+                MemoDTO memoDTO = mdatas.get(event.position);
                 //Where문 > ? 값을 selectionArgs 의 순서대로 참조하여 Cursor에 입력이 됨.
                 if ( mMemoFacade.itemDelete(memoDTO.getId()) > 0) {
                     mdatas = mMemoFacade.getMemoAllList();
 
                     // TODO notifyDataSetChanged 리스트 갱신이 안되네 ...
-                    mAdapter = new MemoAdapter(mdatas);
-                    mListview.setAdapter(mAdapter);
+                    memoRecyclerAdapter.swap(mdatas);
                 }
             }
         });
@@ -91,16 +102,16 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
         // Create the AlertDialog
         AlertDialog dialog = builder.create();
         dialog.show();
-        return true;
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onItemClick(MemoRecyclerAdapter.ItemClickEvent event) {
         Intent intent = new Intent(this, MemoDetailActivity.class);
-        selectPosition = position;
-        intent.putExtra("data", mdatas.get(position));
+        intent.putExtra("data", mdatas.get(event.position));
         startActivityForResult(intent, MEMO_MODIFY_CODE);
     }
+
 
     @Override
     public void onClick(View v) {
@@ -144,62 +155,7 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         }
-        // TODO notifyDataSetChanged 리스트 갱신이 안되네 ...
-        mAdapter = new MemoAdapter(mdatas);
-        mListview.setAdapter(mAdapter);
-    }
-
-    public static class MemoAdapter extends BaseAdapter {
-
-        private List<MemoDTO> mdatas;
-
-        public MemoAdapter(List<MemoDTO> mdatas) {
-            this.mdatas = mdatas;
-        }
-
-        @Override
-        public int getCount() {
-            return this.mdatas.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return this.mdatas.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            ViewHodel viewHodel;
-
-            if (convertView == null) {
-                viewHodel = new ViewHodel();
-                convertView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.item_text, parent, false);
-
-                viewHodel.title = convertView.findViewById(R.id.fragTextview);
-                viewHodel.content = convertView.findViewById(R.id.memo_content);
-                convertView.setTag(viewHodel);
-            } else {
-                viewHodel = (ViewHodel) convertView.getTag();
-            }
-
-            MemoDTO row = mdatas.get(position);
-            viewHodel.title.setText(row.getTitle());
-            viewHodel.content.setText(row.getCotent());
-
-            return convertView;
-        }
-
-        private static class ViewHodel {
-            TextView title;
-            TextView content;
-        }
+        memoRecyclerAdapter.swap(mdatas);
     }
 
 
