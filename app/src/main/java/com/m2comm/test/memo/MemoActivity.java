@@ -3,6 +3,7 @@ package com.m2comm.test.memo;
 import androidx.annotation.Nullable;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
@@ -41,10 +42,12 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
     private String TAG = MemoActivity.class.getSimpleName();
     public static int MEMO_WRITE_CODE = 1;
     public static int MEMO_MODIFY_CODE = 2;
+    int selectionItem = -1;
     private RecyclerView mListview;
     private MemoRecyclerAdapter memoRecyclerAdapter;
     private List<MemoDTO> mdatas;
     private MemoFacade mMemoFacade;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,10 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
 
         memoRecyclerAdapter = new MemoRecyclerAdapter(this.mdatas);
         mListview.setAdapter(memoRecyclerAdapter);
+        RecyclerView.ItemAnimator animator = new DefaultItemAnimator();
+        animator.setChangeDuration(500);
+        mListview.setItemAnimator(animator);
+
     }
 
     @Override
@@ -109,6 +116,7 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
     public void onItemClick(MemoRecyclerAdapter.ItemClickEvent event) {
         Intent intent = new Intent(this, MemoDetailActivity.class);
         intent.putExtra("data", mdatas.get(event.position));
+        this.selectionItem = event.position;
         startActivityForResult(intent, MEMO_MODIFY_CODE);
     }
 
@@ -142,6 +150,7 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(this, "sqlite Error", Toast.LENGTH_SHORT).show();
                     } else {
                         mdatas = this.mMemoFacade.getMemoAllList();
+                        memoRecyclerAdapter.insert(mdatas);
                     }
                 }
             }
@@ -151,11 +160,12 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
                     MemoDTO row = (MemoDTO) data.getSerializableExtra("data");
                     if ( mMemoFacade.itemUpdate(row.getId() , row.getTitle() , row.getCotent()) > 0 ) {
                         mdatas = this.mMemoFacade.getMemoAllList();
+                        memoRecyclerAdapter.update(mdatas , this.selectionItem);
                     }
                 }
             }
         }
-        memoRecyclerAdapter.swap(mdatas);
+
     }
 
 

@@ -30,6 +30,11 @@ public class MemoRecyclerAdapter extends  RecyclerView.Adapter<MemoRecyclerAdapt
         notifyDataSetChanged();
     }
 
+    public void insert (List<MemoActivity.MemoDTO> newMemoList ) {
+        mdatas = newMemoList;
+        notifyItemInserted(0);
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -86,6 +91,11 @@ public class MemoRecyclerAdapter extends  RecyclerView.Adapter<MemoRecyclerAdapt
             this.view = view;
             this.position = position;
         }
+    }
+
+    public void update(List<MemoActivity.MemoDTO> memoDTOList , int position) {
+        mdatas = memoDTOList;
+        notifyItemChanged(position);
     }
 
 
