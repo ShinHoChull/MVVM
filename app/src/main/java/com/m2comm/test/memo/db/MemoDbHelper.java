@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 
 public class MemoDbHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "memo.db";
 
     public MemoDbHelper(@Nullable Context context ) {
@@ -24,7 +24,12 @@ public class MemoDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        if ( oldVersion < newVersion ) {
+            StringBuffer sb = new StringBuffer();
+            sb.append(" Alter table "+MemoContract.MemoEntry.TABLE_NAME+" add "+
+                    MemoContract.MemoEntry.COLUMN_NAME_IMAGE_URI+" text");
+            db.execSQL(sb.toString());
+        }
     }
 
 }

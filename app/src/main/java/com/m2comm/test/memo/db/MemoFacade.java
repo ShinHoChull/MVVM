@@ -28,13 +28,14 @@ public class MemoFacade {
      * @param title   제목
      * @param content 내용
      */
-    public long insert(String title, String content) {
+    public long insert(String title, String content, String imgUri) {
         //gets the data repository in write mode
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(MemoContract.MemoEntry.COLUMN_NAME_TITLE, title);
         values.put(MemoContract.MemoEntry.COLUMN_NAME_CONTENT, content);
+        values.put(MemoContract.MemoEntry.COLUMN_NAME_IMAGE_URI , imgUri);
 
         return db.insert(MemoContract.MemoEntry.TABLE_NAME, null, values);
     }
@@ -89,7 +90,11 @@ public class MemoFacade {
                         cursor.getColumnIndexOrThrow(
                                 MemoContract.MemoEntry.COLUMN_NAME_CONTENT));
 
-                MemoActivity.MemoDTO row = new MemoActivity.MemoDTO(id , title , cotent);
+                String imageUri = cursor.getString(
+                        cursor.getColumnIndexOrThrow(
+                                MemoContract.MemoEntry.COLUMN_NAME_IMAGE_URI));
+
+                MemoActivity.MemoDTO row = new MemoActivity.MemoDTO(id , title , cotent , imageUri);
                 memoDTOS.add(row);
             }
             cursor.close();
@@ -105,12 +110,13 @@ public class MemoFacade {
      * @param title 메모 제목
      * @param content 메모 내용
      * */
-    public int itemUpdate(String id , String title , String content ) {
+    public int itemUpdate(String id , String title , String content , String imgUri ) {
 
         // New value for one column
         ContentValues values = new ContentValues();
         values.put(MemoContract.MemoEntry.COLUMN_NAME_TITLE, title);
         values.put(MemoContract.MemoEntry.COLUMN_NAME_CONTENT, content);
+        values.put(MemoContract.MemoEntry.COLUMN_NAME_IMAGE_URI , imgUri);
 
         // Which row to update, based on the title
         String selection = MemoContract.MemoEntry._ID + " = ?";

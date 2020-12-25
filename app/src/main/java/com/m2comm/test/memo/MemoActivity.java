@@ -6,17 +6,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 
+
+import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
+import android.transition.ChangeImageTransform;
+import android.transition.ChangeTransform;
+import android.transition.TransitionSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -51,8 +58,20 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //화면 전환 기능 켜기.
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            TransitionSet set = new TransitionSet();
+            set.addTransition(new ChangeImageTransform());
+            getWindow().setExitTransition(set);
+            getWindow().setEnterTransition(set);
+        }
 
         this.mdatas = new ArrayList<>();
         this.mMemoFacade = new MemoFacade(this);
@@ -61,7 +80,7 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
         //DB에서 읽어오기
         this.mdatas = this.mMemoFacade.getMemoAllList();
 
-        memoRecyclerAdapter = new MemoRecyclerAdapter(this.mdatas);
+        memoRecyclerAdapter = new MemoRecyclerAdapter(this.mdatas, this);
         mListview.setAdapter(memoRecyclerAdapter);
         RecyclerView.ItemAnimator animator = new DefaultItemAnimator();
         animator.setChangeDuration(500);
@@ -117,7 +136,9 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = new Intent(this, MemoDetailActivity.class);
         intent.putExtra("data", mdatas.get(event.position));
         this.selectionItem = event.position;
-        startActivityForResult(intent, MEMO_MODIFY_CODE);
+        //startActivityForResult(intent, MEMO_MODIFY_CODE);
+        startActivityForResult(intent, MEMO_MODIFY_CODE ,
+                ActivityOptions.makeSceneTransitionAnimation(this , event.view , "image").toBundle());
     }
 
 
@@ -128,6 +149,7 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.memo_writeBt:
                 Intent intent = new Intent(this, MemoDetailActivity.class);
                 startActivityForResult(intent, MEMO_WRITE_CODE);
+
                 break;
         }
     }
@@ -145,7 +167,7 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
             if (resultCode == RESULT_OK) {
                 if (data != null) {
                     MemoDTO row = (MemoDTO) data.getSerializableExtra("data");
-                    long newRowId = this.mMemoFacade.insert(row.getTitle(), row.getCotent());
+                    long newRowId = this.mMemoFacade.insert(row.getTitle(), row.getCotent() , row.ImageUri);
                     if (newRowId == -1) {
                         Toast.makeText(this, "sqlite Error", Toast.LENGTH_SHORT).show();
                     } else {
@@ -158,7 +180,7 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
             if (resultCode == RESULT_OK) {
                 if (data != null) {
                     MemoDTO row = (MemoDTO) data.getSerializableExtra("data");
-                    if ( mMemoFacade.itemUpdate(row.getId() , row.getTitle() , row.getCotent()) > 0 ) {
+                    if ( mMemoFacade.itemUpdate(row.getId() , row.getTitle() , row.getCotent() , row.ImageUri) > 0 ) {
                         mdatas = this.mMemoFacade.getMemoAllList();
                         memoRecyclerAdapter.update(mdatas , this.selectionItem);
                     }
@@ -173,11 +195,22 @@ public class MemoActivity extends AppCompatActivity implements View.OnClickListe
         String id;
         String title;
         String cotent;
+        String ImageUri;
 
-        public MemoDTO(String id, String title, String cotent) {
+
+        public MemoDTO(String id, String title, String cotent, String imageUri) {
             this.id = id;
             this.title = title;
             this.cotent = cotent;
+            ImageUri = imageUri;
+        }
+
+        public void setImageUri(String imageUri) {
+            ImageUri = imageUri;
+        }
+
+        public String getImageUri() {
+            return ImageUri;
         }
 
         public void setId(String id) {
