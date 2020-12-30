@@ -14,15 +14,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
+            android:name=".music.MyService"
+            android:enabled="true"
+            android:exported="true"></service>
+        <service
             android:name=".music.MyIntentService"
-            android:exported="false"></service>
+            android:exported="false" />
 
         <activity android:name=".music.MusicPlayerActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".coordinatorlayout.ScrollingActivity"
@@ -33,7 +33,13 @@
         <activity
             android:name=".memo.MemoDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".memo.MemoActivity"></activity>
+        <activity android:name=".memo.MemoActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".fragments.ViewPagerActivity" />
         <activity android:name=".fragments.ImageFragmentActivity" />
         <activity android:name=".ListViewTraing.ListViewExamActivity" />
