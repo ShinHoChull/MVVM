@@ -8,6 +8,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -17,18 +20,24 @@ import com.m2comm.test.music.fragment.PlayerFragment;
 import com.m2comm.test.music.fragment.SingerListViewFragment;
 import com.m2comm.test.music.fragment.SongFragment;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MusicPlayerActivity extends AppCompatActivity {
 
+    private String TAG = MusicPlayerActivity.class.getSimpleName();
+
     private PlayerFragment mPlayerFragment;
     private SingerListViewFragment mSingerFragment;
     private SongFragment mSongFragment;
 
-    private String TAG = MusicPlayerActivity.class.getSimpleName();
     ArrayList<String> singerNameArr;
-    ArrayList<String> songNameArr;
+
+    private MediaPlayer mMediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,18 +54,45 @@ public class MusicPlayerActivity extends AppCompatActivity {
         this.mSingerFragment = SingerListViewFragment.newInstance(this.singerNameArr);
 
         this.mPlayerFragment = new PlayerFragment();
-
-
-        this.songNameArr = new ArrayList<>();
-        this.songNameArr.add("쟤가걔야 - 마마무");
-        this.songNameArr.add("서시 - 신성우");
-        this.songNameArr.add("Y - 프리스타일");
-        this.mSongFragment = SongFragment.newInstance(this.songNameArr);
+        this.mSongFragment = SongFragment.newInstance();
 
         tabLayout.setupWithViewPager(viewPager);
 
         MusicPlayerPagerAdapter adapter = new MusicPlayerPagerAdapter(getSupportFragmentManager(),0);
         viewPager.setAdapter(adapter);
+
+        mMediaPlayer = new MediaPlayer();
+        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void playMusic(Uri uri) {
+
+        try {
+            mMediaPlayer.setDataSource(getApplicationContext() , uri);
+            mMediaPlayer.prepare();
+            mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mMediaPlayer.start();
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private class MusicPlayerPagerAdapter extends FragmentPagerAdapter {

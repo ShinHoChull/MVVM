@@ -5,8 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,6 +18,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.m2comm.test.R;
+import com.m2comm.test.utils.MyUtils;
 
 import java.io.Serializable;
 import java.net.URI;
@@ -66,12 +70,21 @@ public class MemoDetailActivity extends AppCompatActivity implements View.OnClic
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == IMAGE_CHOICE && resultCode == RESULT_OK) {
             if (data != null) {
+
                 Uri imageUri = data.getData();
-                this.imageUri = data.getData().toString();
+
+//                final int takeFlags = getIntent().getFlags()
+//                        & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+//                        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+//                getContentResolver().takePersistableUriPermission(imageUri, takeFlags);
+
+                this.imageUri = MyUtils.getRealPath(this , imageUri);
                 Glide.with(this).load(imageUri).thumbnail(0.2f).into(mImageView);
             }
         }
     }
+
+
 
     public void onImageClick(View view) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);

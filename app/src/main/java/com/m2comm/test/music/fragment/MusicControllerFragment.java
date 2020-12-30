@@ -1,14 +1,20 @@
 package com.m2comm.test.music.fragment;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,10 +25,41 @@ import com.m2comm.test.R;
 import com.m2comm.test.music.MyIntentService;
 import com.m2comm.test.music.MyService;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 public class MusicControllerFragment extends Fragment {
 
     MyService mService;
     boolean mBound = false;
+    private ImageView mImageView;
+    private TextView mTitle;
+    private TextView mSingerName;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void updateUI ( MediaMetadataRetriever retriever ) {
+        mTitle.setText(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE));
+        mSingerName.setText(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST));
+
+        //오디오 Thumbnail Image
+        byte[] albumImage = retriever.getEmbeddedPicture();
+        if ( albumImage != null ) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(albumImage ,0 , albumImage.length);
+            mImageView.setImageBitmap(bitmap);
+        }
+    }
 
     @Nullable
     @Override
@@ -33,30 +70,9 @@ public class MusicControllerFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        Button before_song_bt = view.findViewById(R.id.before_song);
-        before_song_bt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), MyIntentService.class);
-                getActivity().startService(intent);
-            }
-        });
-
-        view.findViewById(R.id.next_song).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), MyService.class);
-                getActivity().bindService(intent, mConnection, getActivity().BIND_AUTO_CREATE);
-            }
-        });
-
-        view.findViewById(R.id.play_song).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getNumber(v);
-            }
-        });
+        this.mImageView = view.findViewById(R.id.music_controller_albumImage);
+        this.mTitle = view.findViewById(R.id.music_controller_title);
+        this.mSingerName = view.findViewById(R.id.music_controller_singer_name);
     }
 
     public void getNumber( View view ) {

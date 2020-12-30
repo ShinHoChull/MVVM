@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
 
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -22,7 +23,11 @@
             android:exported="false" />
 
         <activity android:name=".music.MusicPlayerActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".coordinatorlayout.ScrollingActivity"
@@ -34,11 +39,7 @@
             android:name=".memo.MemoDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".memo.MemoActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".fragments.ViewPagerActivity" />
         <activity android:name=".fragments.ImageFragmentActivity" />
@@ -47,6 +48,8 @@
         <activity android:name=".mvvm.ShareVmActivity" />
         <activity android:name=".mvvm.CalculaterMainActivity" />
         <activity android:name=".main.MainActivity" />
+
+
     </application>
 
 </manifest>
