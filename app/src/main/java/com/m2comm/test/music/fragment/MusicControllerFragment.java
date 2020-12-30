@@ -21,7 +21,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.m2comm.test.R;
+import com.m2comm.test.music.MusicPlayerActivity;
 import com.m2comm.test.music.MyIntentService;
 import com.m2comm.test.music.MyService;
 
@@ -35,6 +37,8 @@ public class MusicControllerFragment extends Fragment {
     private ImageView mImageView;
     private TextView mTitle;
     private TextView mSingerName;
+    private Button mPlayButton;
+    private boolean mIsPlaying = false;
 
     @Override
     public void onStart() {
@@ -56,9 +60,20 @@ public class MusicControllerFragment extends Fragment {
         //오디오 Thumbnail Image
         byte[] albumImage = retriever.getEmbeddedPicture();
         if ( albumImage != null ) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(albumImage ,0 , albumImage.length);
-            mImageView.setImageBitmap(bitmap);
+//            Bitmap bitmap = BitmapFactory.decodeByteArray(albumImage ,0 , albumImage.length);
+            Glide.with(this).load(albumImage).into(mImageView);
         }
+        this.updateButton(true);
+    }
+
+    public void updateButton(boolean isPlaying) {
+        this.mIsPlaying = isPlaying;
+        if ( isPlaying ) {
+            mPlayButton.setText("정지");
+        } else {
+            mPlayButton.setText("재생");
+        }
+
     }
 
     @Nullable
@@ -73,6 +88,7 @@ public class MusicControllerFragment extends Fragment {
         this.mImageView = view.findViewById(R.id.music_controller_albumImage);
         this.mTitle = view.findViewById(R.id.music_controller_title);
         this.mSingerName = view.findViewById(R.id.music_controller_singer_name);
+        this.mPlayButton = view.findViewById(R.id.play_song);
     }
 
     public void getNumber( View view ) {

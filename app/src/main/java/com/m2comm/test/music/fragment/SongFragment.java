@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.m2comm.test.R;
 import com.m2comm.test.music.CursorRecyclerViewAdapter;
+import com.m2comm.test.music.dtos.MusicUiController;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -91,21 +92,15 @@ public class SongFragment extends Fragment {
 
             viewHolder.title.setText(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE));
             viewHolder.singerName.setText(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST));
+            final MusicUiController event = new MusicUiController(uri , retriever);
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     /**
                      * 음악틀기
-                     * {@link com.m2comm.test.music.MusicPlayerActivity.playMusic(Uri)}
+                     * {@link com.m2comm.test.music.MusicPlayerActivity#playMusic(MusicUiController)}
                      * */
-                    EventBus.getDefault().post(uri);
-                    /**
-                     * 음악틀기
-                     * {@link com.m2comm.test.music.MusicControllerFragment.updateUI(MediaMetadataRetriever)}
-                     * */
-                    EventBus.getDefault().post(retriever);
-
-
+                    EventBus.getDefault().post(event);
                 }
             });
             //오디오 Thumbnail Image

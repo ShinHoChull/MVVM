@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.media.AudioManager;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.util.Log;
 
 import com.google.android.material.tabs.TabLayout;
 import com.m2comm.test.R;
+import com.m2comm.test.music.dtos.MusicUiController;
 import com.m2comm.test.music.fragment.PlayerFragment;
 import com.m2comm.test.music.fragment.SingerListViewFragment;
 import com.m2comm.test.music.fragment.SongFragment;
@@ -78,21 +80,35 @@ public class MusicPlayerActivity extends AppCompatActivity {
     }
 
     @Subscribe
-    public void playMusic(Uri uri) {
+    public void playMusic(final MusicUiController event) {
 
         try {
-            mMediaPlayer.setDataSource(getApplicationContext() , uri);
+            mMediaPlayer.setDataSource(getApplicationContext() , event.uri);
             mMediaPlayer.prepare();
             mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
                     mMediaPlayer.start();
+                    if ( mMediaPlayer.isPlaying() ) {
+                        /**
+                         * {@link com.m2comm.test.music.fragment.MusicControllerFragment#updateUI(MediaMetadataRetriever)}
+                         * */
+                        EventBus.getDefault().post(event.retriever);
+                    }
                 }
             });
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+    }
+
+    public boolean isPlaying() {
+        boolean isPlay = false;
+        if ( mMediaPlayer != null )
+        isPlay = mMediaPlayer.isPlaying();
+
+        return isPlay;
     }
 
     private class MusicPlayerPagerAdapter extends FragmentPagerAdapter {
