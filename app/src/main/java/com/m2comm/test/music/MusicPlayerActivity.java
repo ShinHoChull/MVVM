@@ -14,6 +14,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.material.tabs.TabLayout;
 import com.m2comm.test.R;
@@ -100,7 +101,19 @@ public class MusicPlayerActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    @Subscribe
+    public void clickPlayButton ( View v ) {
+        if ( mMediaPlayer.isPlaying() ) {
+            mMediaPlayer.pause();
+        } else {
+            mMediaPlayer.start();
+        }
+        /**
+         * {@link com.m2comm.test.music.fragment.MusicControllerFragment#updateButton(boolean)}
+         * */
+        EventBus.getDefault().post(mMediaPlayer.isPlaying());
     }
 
     public boolean isPlaying() {

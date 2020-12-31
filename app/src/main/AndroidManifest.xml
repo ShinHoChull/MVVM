@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -14,10 +13,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".toast.CustomDesignActivity">
+
+        </activity>
+
         <service
             android:name=".music.MyService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
         <service
             android:name=".music.MyIntentService"
             android:exported="false" />
@@ -38,9 +41,7 @@
         <activity
             android:name=".memo.MemoDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".memo.MemoActivity" >
-
-        </activity>
+        <activity android:name=".memo.MemoActivity"></activity>
         <activity android:name=".fragments.ViewPagerActivity" />
         <activity android:name=".fragments.ImageFragmentActivity" />
         <activity android:name=".ListViewTraing.ListViewExamActivity" />
@@ -48,8 +49,6 @@
         <activity android:name=".mvvm.ShareVmActivity" />
         <activity android:name=".mvvm.CalculaterMainActivity" />
         <activity android:name=".main.MainActivity" />
-
-
     </application>
 
 </manifest>

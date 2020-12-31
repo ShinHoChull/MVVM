@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+        <TextView
+            android:id="@+id/custom_toast_text"
+            android:padding="14dp"
+            android:textStyle="italic"
+            android:textSize="15sp"
+            android:textColor="#831212"
+            android:text="ABCDEF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_toast"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:src="@drawable/picture"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            app:civ_border_width="2dp"
+            app:civ_border_color="#FF000000"
+            />
+    </LinearLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

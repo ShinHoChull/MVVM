@@ -30,7 +30,7 @@ import com.m2comm.test.music.MyService;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-public class MusicControllerFragment extends Fragment {
+public class MusicControllerFragment extends Fragment implements View.OnClickListener {
 
     MyService mService;
     boolean mBound = false;
@@ -66,14 +66,17 @@ public class MusicControllerFragment extends Fragment {
         this.updateButton(true);
     }
 
-    public void updateButton(boolean isPlaying) {
+    /**
+     * @param isPlaying 하단 버튼 플레이버튼 onOff
+     * */
+    @Subscribe
+    public void updateButton(Boolean isPlaying) {
         this.mIsPlaying = isPlaying;
         if ( isPlaying ) {
             mPlayButton.setText("정지");
         } else {
             mPlayButton.setText("재생");
         }
-
     }
 
     @Nullable
@@ -89,6 +92,7 @@ public class MusicControllerFragment extends Fragment {
         this.mTitle = view.findViewById(R.id.music_controller_title);
         this.mSingerName = view.findViewById(R.id.music_controller_singer_name);
         this.mPlayButton = view.findViewById(R.id.play_song);
+        this.mPlayButton.setOnClickListener(this);
     }
 
     public void getNumber( View view ) {
@@ -120,5 +124,13 @@ public class MusicControllerFragment extends Fragment {
             getActivity().unbindService(mConnection);
             this.mBound = false;
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        /**
+         * {@link MusicPlayerActivity#clickPlayButton(View)}
+         * */
+        EventBus.getDefault().post(v);
     }
 }
