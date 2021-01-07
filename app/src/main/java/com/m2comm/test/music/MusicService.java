@@ -19,6 +19,7 @@ import com.m2comm.test.music.dtos.MusicUiController;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,23 +30,16 @@ public class MusicService extends Service {
     final public static String ACTION_PAUSE = "pause";
     private static final String TAG = MusicService.class.getSimpleName();
 
-
     private MediaPlayer mMediaPlayer;
-
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mMediaPlayer = new MediaPlayer();
-        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
-        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 
 
@@ -56,11 +50,13 @@ public class MusicService extends Service {
         switch (intent.getAction()) {
 
             case ACTION_PLAY:
-                if ( event != null )playMusic(event);
+                if ( event != null ) {
+                    this.playMusic(event);
+                }
                 break;
 
             case ACTION_PAUSE:
-
+                this.clickPlayButton();
                 break;
         }
 
@@ -73,14 +69,24 @@ public class MusicService extends Service {
         return null;
     }
 
-    @Subscribe
+
     public void playMusic(final MusicUiController event) {
 
-        Log.d(TAG , "event = "+event.getUri().toString());
         try {
-            mMediaPlayer.setDataSource(getApplicationContext() , event.uri);
-            mMediaPlayer.prepare();
-            mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+
+            if ( this.mMediaPlayer == null )this.mMediaPlayer = new MediaPlayer();
+
+            if ( this.mMediaPlayer.isPlaying() ) {
+                Log.d(TAG , "isPlaying true");
+                this.mMediaPlayer.stop();
+                this.mMediaPlayer.release();
+                this.mMediaPlayer = new MediaPlayer();
+            }
+
+            this.mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            this.mMediaPlayer.setDataSource(getApplicationContext() , event.getUri());
+
+            this.mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
                     mMediaPlayer.start();
@@ -95,10 +101,11 @@ public class MusicService extends Service {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        this.mMediaPlayer.prepareAsync();
     }
 
-    @Subscribe
-    public void clickPlayButton ( View v ) {
+    public void clickPlayButton () {
         if ( mMediaPlayer.isPlaying() ) {
             mMediaPlayer.pause();
         } else {
@@ -110,13 +117,6 @@ public class MusicService extends Service {
         EventBus.getDefault().post(mMediaPlayer.isPlaying());
     }
 
-    public boolean isPlaying() {
-        boolean isPlay = false;
-        if ( mMediaPlayer != null )
-            isPlay = mMediaPlayer.isPlaying();
-
-        return isPlay;
-    }
 
 
 

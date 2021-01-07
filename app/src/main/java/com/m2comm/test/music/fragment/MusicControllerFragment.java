@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.m2comm.test.R;
 import com.m2comm.test.music.MusicPlayerActivity;
+import com.m2comm.test.music.MusicService;
 import com.m2comm.test.music.MyIntentService;
 import com.m2comm.test.music.MyService;
 import com.m2comm.test.music.dtos.MusicUiController;
@@ -129,9 +130,8 @@ public class MusicControllerFragment extends Fragment implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        /**
-         * {@link com.m2comm.test.music.MusicService#clickPlayButton(View)}
-         * */
-        EventBus.getDefault().post(v);
+        Intent intent = new Intent(getActivity() , MusicService.class);
+        intent.setAction(MusicService.ACTION_PAUSE);
+        getActivity().startService(intent);
     }
 }
