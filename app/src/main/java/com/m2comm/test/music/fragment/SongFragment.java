@@ -2,6 +2,7 @@ package com.m2comm.test.music.fragment;
 
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,13 +24,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.m2comm.test.R;
 import com.m2comm.test.music.CursorRecyclerViewAdapter;
+import com.m2comm.test.music.MusicService;
+import com.m2comm.test.music.MyService;
 import com.m2comm.test.music.dtos.MusicUiController;
 
 import org.greenrobot.eventbus.EventBus;
 
 public class SongFragment extends Fragment {
-
-
 
     public static SongFragment newInstance() {
 
@@ -63,7 +64,6 @@ public class SongFragment extends Fragment {
 
         SongAdapter adapter = new SongAdapter(getContext() , cursor);
         recyclerView.setAdapter(adapter);
-
     }
 
     private class SongAdapter extends CursorRecyclerViewAdapter<ViewHodler> {
@@ -84,31 +84,38 @@ public class SongFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHodler viewHolder, Cursor cursor) {
-            final Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI ,
+            Uri uri = null;
+            uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI ,
                     cursor.getLong(cursor.getColumnIndexOrThrow(BaseColumns._ID)));
 
             final MediaMetadataRetriever retriever = new MediaMetadataRetriever();
             retriever.setDataSource(getContext() , uri);
+            String title = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+            String singerName = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+            byte[] albumImage = retriever.getEmbeddedPicture();
 
-            viewHolder.title.setText(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE));
-            viewHolder.singerName.setText(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST));
-            final MusicUiController event = new MusicUiController(uri , retriever);
+            viewHolder.title.setText(title);
+            viewHolder.singerName.setText(singerName);
+            //오디오 Thumbnail Image
+            Bitmap bitmap = null;
+            if ( albumImage != null ) {
+                bitmap = BitmapFactory.decodeByteArray(albumImage ,0 , albumImage.length);
+                bitmap = Bitmap.createScaledBitmap(bitmap , 100 , 100 , true);
+                viewHolder.imageView.setImageBitmap(bitmap);
+            }
+            final MusicUiController event = new MusicUiController(uri , title , singerName , bitmap);
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    /**
-                     * 음악틀기
-                     * {@link com.m2comm.test.music.MusicPlayerActivity#playMusic(MusicUiController)}
-                     * */
-                    EventBus.getDefault().post(event);
+                    //EventBus.getDefault().post(event);
+                    Intent intent = new Intent(getContext() , MusicService.class);
+                    intent.setAction(MusicService.ACTION_PLAY);
+                    intent.putExtra("obj",event);
+                    getActivity().startService(intent);
                 }
             });
-            //오디오 Thumbnail Image
-            byte[] albumImage = retriever.getEmbeddedPicture();
-            if ( albumImage != null ) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(albumImage ,0 , albumImage.length);
-                viewHolder.imageView.setImageBitmap(bitmap);
-            }
+
+
         }
     }
 

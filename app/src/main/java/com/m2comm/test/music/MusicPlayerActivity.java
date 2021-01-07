@@ -40,8 +40,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
     ArrayList<String> singerNameArr;
 
-    private MediaPlayer mMediaPlayer;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,65 +62,8 @@ public class MusicPlayerActivity extends AppCompatActivity {
         MusicPlayerPagerAdapter adapter = new MusicPlayerPagerAdapter(getSupportFragmentManager(),0);
         viewPager.setAdapter(adapter);
 
-        mMediaPlayer = new MediaPlayer();
-        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe
-    public void playMusic(final MusicUiController event) {
-
-        try {
-            mMediaPlayer.setDataSource(getApplicationContext() , event.uri);
-            mMediaPlayer.prepare();
-            mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mMediaPlayer.start();
-                    if ( mMediaPlayer.isPlaying() ) {
-                        /**
-                         * {@link com.m2comm.test.music.fragment.MusicControllerFragment#updateUI(MediaMetadataRetriever)}
-                         * */
-                        EventBus.getDefault().post(event.retriever);
-                    }
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Subscribe
-    public void clickPlayButton ( View v ) {
-        if ( mMediaPlayer.isPlaying() ) {
-            mMediaPlayer.pause();
-        } else {
-            mMediaPlayer.start();
-        }
-        /**
-         * {@link com.m2comm.test.music.fragment.MusicControllerFragment#updateButton(boolean)}
-         * */
-        EventBus.getDefault().post(mMediaPlayer.isPlaying());
-    }
-
-    public boolean isPlaying() {
-        boolean isPlay = false;
-        if ( mMediaPlayer != null )
-        isPlay = mMediaPlayer.isPlaying();
-
-        return isPlay;
-    }
 
     private class MusicPlayerPagerAdapter extends FragmentPagerAdapter {
 

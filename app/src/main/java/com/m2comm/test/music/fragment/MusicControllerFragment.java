@@ -26,6 +26,7 @@ import com.m2comm.test.R;
 import com.m2comm.test.music.MusicPlayerActivity;
 import com.m2comm.test.music.MyIntentService;
 import com.m2comm.test.music.MyService;
+import com.m2comm.test.music.dtos.MusicUiController;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -53,15 +54,15 @@ public class MusicControllerFragment extends Fragment implements View.OnClickLis
     }
 
     @Subscribe
-    public void updateUI ( MediaMetadataRetriever retriever ) {
-        mTitle.setText(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE));
-        mSingerName.setText(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST));
+    public void updateUI ( MusicUiController event ) {
+        mTitle.setText(event.getTitle());
+        mSingerName.setText(event.getSingerName());
 
         //오디오 Thumbnail Image
-        byte[] albumImage = retriever.getEmbeddedPicture();
-        if ( albumImage != null ) {
+
+        if ( event.getBitmap() != null ) {
 //            Bitmap bitmap = BitmapFactory.decodeByteArray(albumImage ,0 , albumImage.length);
-            Glide.with(this).load(albumImage).into(mImageView);
+            Glide.with(this).load(event.getBitmap()).into(mImageView);
         }
         this.updateButton(true);
     }
@@ -129,7 +130,7 @@ public class MusicControllerFragment extends Fragment implements View.OnClickLis
     @Override
     public void onClick(View v) {
         /**
-         * {@link MusicPlayerActivity#clickPlayButton(View)}
+         * {@link com.m2comm.test.music.MusicService#clickPlayButton(View)}
          * */
         EventBus.getDefault().post(v);
     }

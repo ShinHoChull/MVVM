@@ -18,12 +18,9 @@
         </activity>
 
         <service
-            android:name=".music.MyService"
+            android:name=".music.MusicService"
             android:enabled="true"
             android:exported="true" />
-        <service
-            android:name=".music.MyIntentService"
-            android:exported="false" />
 
         <activity android:name=".music.MusicPlayerActivity">
             <intent-filter>
