@@ -99,6 +99,7 @@ public class SongFragment extends Fragment {
             String title = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
             String singerName = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
             String duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            //mediaPlay.getDuration() 으로도 값을 가져올수있음.
             byte[] albumImage = retriever.getEmbeddedPicture();
 
             viewHolder.title.setText(title);
