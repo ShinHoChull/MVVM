@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.media.MediaBrowserCompat;
@@ -30,7 +31,8 @@ public class MusicService extends Service {
     final public static String ACTION_PAUSE = "pause";
     private static final String TAG = MusicService.class.getSimpleName();
 
-    private MediaPlayer mMediaPlayer;
+    public MediaPlayer mMediaPlayer;
+    private MusicUiController mPlayingMusicObj;
 
     @Override
     public void onCreate() {
@@ -63,47 +65,48 @@ public class MusicService extends Service {
         return START_STICKY;
     }
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-
     public void playMusic(final MusicUiController event) {
 
         try {
-
-            if ( this.mMediaPlayer == null )this.mMediaPlayer = new MediaPlayer();
-
-            if ( this.mMediaPlayer.isPlaying() ) {
-                Log.d(TAG , "isPlaying true");
+            if ( this.mMediaPlayer == null ) {
+                this.mMediaPlayer = new MediaPlayer();
+            } else {
                 this.mMediaPlayer.stop();
                 this.mMediaPlayer.release();
                 this.mMediaPlayer = new MediaPlayer();
             }
 
-            this.mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            this.mMediaPlayer.setAudioStreamType( AudioManager.STREAM_MUSIC );
             this.mMediaPlayer.setDataSource(getApplicationContext() , event.getUri());
+
+            mPlayingMusicObj = event;
 
             this.mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
-                    mMediaPlayer.start();
+                    mp.start();
                     if ( mMediaPlayer.isPlaying() ) {
                         /**
-                         * {@link com.m2comm.test.music.fragment.MusicControllerFragment#updateUI(MusicUiController)}
+                         * {@link com.m2comm.test.music.fragment.MusicControllerFragment#updateButton(Boolean)}
                          * */
-                        EventBus.getDefault().post(event);
+                        EventBus.getDefault().post(true);
                     }
                 }
             });
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         this.mMediaPlayer.prepareAsync();
     }
+
+
+    public MusicUiController getCurrentMusicObj() {
+        return mPlayingMusicObj;
+    }
+
 
     public void clickPlayButton () {
         if ( mMediaPlayer.isPlaying() ) {
@@ -117,6 +120,18 @@ public class MusicService extends Service {
         EventBus.getDefault().post(mMediaPlayer.isPlaying());
     }
 
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
+
+    private IBinder mBinder = new MusicService.MyBinder();
+
+    public class MyBinder extends Binder {
+        public MusicService getService() {
+            return MusicService.this;
+        }
+    }
 
 
 

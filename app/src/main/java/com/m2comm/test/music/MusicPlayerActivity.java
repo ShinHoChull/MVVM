@@ -54,14 +54,14 @@ public class MusicPlayerActivity extends AppCompatActivity {
         this.singerNameArr.add("홍서준");
         this.mSingerFragment = SingerListViewFragment.newInstance(this.singerNameArr);
 
-        this.mPlayerFragment = new PlayerFragment();
+        this.mPlayerFragment = PlayerFragment.newInstance();
+
         this.mSongFragment = SongFragment.newInstance();
 
         tabLayout.setupWithViewPager(viewPager);
 
         MusicPlayerPagerAdapter adapter = new MusicPlayerPagerAdapter(getSupportFragmentManager(),0);
         viewPager.setAdapter(adapter);
-
     }
 
 

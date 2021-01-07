@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,50 +35,50 @@ import org.greenrobot.eventbus.Subscribe;
 
 public class MusicControllerFragment extends Fragment implements View.OnClickListener {
 
-    MyService mService;
-    boolean mBound = false;
+    private static final String TAG = MusicControllerFragment.class.getSimpleName();
     private ImageView mImageView;
     private TextView mTitle;
     private TextView mSingerName;
     private Button mPlayButton;
-    private boolean mIsPlaying = false;
+
+    MusicService mMusicService;
+    boolean mBound = false;
 
     @Override
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+        Intent intent = new Intent(getActivity() , MusicService.class);
+        getActivity().bindService(intent , mConnection , Context.BIND_AUTO_CREATE);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
+        if (this.mBound) {
+            getActivity().unbindService(mConnection);
+            this.mBound = false;
+        }
     }
 
-    @Subscribe
-    public void updateUI ( MusicUiController event ) {
+    private void updateUI ( MusicUiController event ) {
+        if ( event == null ) return;
         mTitle.setText(event.getTitle());
         mSingerName.setText(event.getSingerName());
 
         //오디오 Thumbnail Image
-
         if ( event.getBitmap() != null ) {
 //            Bitmap bitmap = BitmapFactory.decodeByteArray(albumImage ,0 , albumImage.length);
             Glide.with(this).load(event.getBitmap()).into(mImageView);
         }
-        this.updateButton(true);
     }
 
-    /**
-     * @param isPlaying 하단 버튼 플레이버튼 onOff
-     * */
     @Subscribe
     public void updateButton(Boolean isPlaying) {
-        this.mIsPlaying = isPlaying;
-        if ( isPlaying ) {
-            mPlayButton.setText("정지");
-        } else {
-            mPlayButton.setText("재생");
+        if ( mBound ) {
+            mPlayButton.setText(this.mMusicService.mMediaPlayer.isPlaying()?"정지" : "재생");
+            updateUI(mMusicService.getCurrentMusicObj());
         }
     }
 
@@ -97,18 +98,12 @@ public class MusicControllerFragment extends Fragment implements View.OnClickLis
         this.mPlayButton.setOnClickListener(this);
     }
 
-    public void getNumber( View view ) {
-        if ( mBound ) {
-            Toast.makeText(getContext() , "" + mService.getTime(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             //Bind가 성공하면 call
-            MyService.MyBinder binder = (MyService.MyBinder) service;
-            mService = binder.getService();
+            MusicService.MyBinder binder = (MusicService.MyBinder) service;
+            mMusicService = binder.getService();
             mBound = true;
         }
 
@@ -122,10 +117,6 @@ public class MusicControllerFragment extends Fragment implements View.OnClickLis
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (this.mBound) {
-            getActivity().unbindService(mConnection);
-            this.mBound = false;
-        }
     }
 
     @Override

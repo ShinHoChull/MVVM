@@ -1,5 +1,6 @@
 package com.m2comm.test.music.fragment;
 
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -54,12 +55,16 @@ public class SongFragment extends Fragment {
 
         RecyclerView recyclerView = view.findViewById(R.id.song_recyclerview);
 
-        Cursor cursor = getActivity().getContentResolver().query(
+        String selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0";
+        String sortOrder = MediaStore.Audio.Media.TITLE + " ASC";
+
+
+        Cursor cursor = getActivity().getContentResolver().query (
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI ,
                 null ,
+                selection ,
                 null ,
-                null ,
-                null
+                sortOrder
         );
 
         SongAdapter adapter = new SongAdapter(getContext() , cursor);
@@ -84,14 +89,16 @@ public class SongFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHodler viewHolder, Cursor cursor) {
-            Uri uri = null;
-            uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI ,
+
+            Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI ,
                     cursor.getLong(cursor.getColumnIndexOrThrow(BaseColumns._ID)));
+
 
             final MediaMetadataRetriever retriever = new MediaMetadataRetriever();
             retriever.setDataSource(getContext() , uri);
             String title = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
             String singerName = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+            String duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
             byte[] albumImage = retriever.getEmbeddedPicture();
 
             viewHolder.title.setText(title);
@@ -100,10 +107,10 @@ public class SongFragment extends Fragment {
             Bitmap bitmap = null;
             if ( albumImage != null ) {
                 bitmap = BitmapFactory.decodeByteArray(albumImage ,0 , albumImage.length);
-                bitmap = Bitmap.createScaledBitmap(bitmap , 100 , 100 , true);
+                bitmap = Bitmap.createScaledBitmap(bitmap , 300 , 300 , true);
                 viewHolder.imageView.setImageBitmap(bitmap);
             }
-            final MusicUiController event = new MusicUiController(uri , title , singerName , bitmap);
+            final MusicUiController event = new MusicUiController(uri , title , singerName , bitmap , duration);
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -114,8 +121,6 @@ public class SongFragment extends Fragment {
                     getActivity().startService(intent);
                 }
             });
-
-
         }
     }
 

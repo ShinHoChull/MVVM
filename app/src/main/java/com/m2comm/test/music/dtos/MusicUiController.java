@@ -14,13 +14,15 @@ public class MusicUiController implements Parcelable {
     public String title;
     public String singerName;
     public Bitmap bitmap;
+    public String duration;
 
 
-    public MusicUiController(Uri uri, String title, String singerName, Bitmap bitmap) {
+    public MusicUiController(Uri uri, String title, String singerName, Bitmap bitmap, String duration) {
         this.uri = uri;
         this.title = title;
         this.singerName = singerName;
         this.bitmap = bitmap;
+        this.duration = duration;
     }
 
     public void setUri(Uri uri) {
@@ -55,6 +57,15 @@ public class MusicUiController implements Parcelable {
         return bitmap;
     }
 
+    public String getDuration() {
+        return duration;
+    }
+
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -67,6 +78,7 @@ public class MusicUiController implements Parcelable {
         dest.writeString(this.title);
         dest.writeString(this.singerName);
         dest.writeParcelable(this.bitmap,flags);
+        dest.writeString(this.duration);
     }
 
     protected MusicUiController(Parcel parcel) {
@@ -82,6 +94,7 @@ public class MusicUiController implements Parcelable {
         this.title = parcel.readString();
         this.singerName = parcel.readString();
         this.bitmap = parcel.readParcelable(ClassLoader.getSystemClassLoader());
+        this.duration = parcel.readString();
     }
 
     // create Parcelable
