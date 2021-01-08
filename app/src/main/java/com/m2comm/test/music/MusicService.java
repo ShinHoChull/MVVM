@@ -17,6 +17,7 @@ import android.os.IBinder;
 import android.support.v4.media.MediaBrowserCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -118,14 +119,28 @@ public class MusicService extends Service {
     * */
     private void showNotification() {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, getString(R.string.CHANNEL_DEFAULT_IMPORTANCE));
-        builder.setContentTitle(mPlayingMusicObj.getTitle());
-        builder.setContentText(mPlayingMusicObj.getSingerName());
+       // builder.setContentTitle(mPlayingMusicObj.getTitle());
+       // builder.setContentText(mPlayingMusicObj.getSingerName());
         builder.setSmallIcon(R.mipmap.ic_launcher);
 
-        Bitmap bitmap = BitmapFactory.decodeResource(
-                getResources() , R.mipmap.ic_launcher
-        );
-        builder.setLargeIcon(bitmap);
+        Intent stopIntent = new Intent(this , MusicService.class );
+        stopIntent.setAction(MusicService.ACTION_PAUSE);
+        PendingIntent stopPendingIntent = PendingIntent.getService(this ,
+                1 , stopIntent , PendingIntent.FLAG_CANCEL_CURRENT );
+
+        //Notification Custom 하기.
+        RemoteViews remoteViews = new RemoteViews(getPackageName() , R.layout.remote_view);
+        remoteViews.setOnClickPendingIntent(R.id.noti_stopBt,stopPendingIntent);
+        //아래와 같은식으로 값을 가져와서 수정함.
+        //remoteViews.setTextViewText(R.id.notifyLocation, location);
+        //remoteViews.setTextViewText(R.id.notifyWeather, "날씨 : " + curWfKor + "," + curTemp);
+
+        builder.setContent(remoteViews);
+
+       // Bitmap bitmap = BitmapFactory.decodeResource (
+        //           getResources() , R.mipmap.ic_launcher
+       // );
+        //builder.setLargeIcon(bitmap);
 
         //알림을 클릭하면 수행될 인텐트
         Intent resultIntent = new Intent(this , MusicPlayerActivity.class);
@@ -137,24 +152,22 @@ public class MusicService extends Service {
         // 노티 클릭하면 지우기.
         builder.setAutoCancel(true);
 
-        builder.setColor(Color.RED);
-
         // 기본 알림
         Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         builder.setSound(uri);
 
         //진동
         builder.setVibrate(new long[]{100,200,300});
-
-        Intent stopIntent = new Intent(this , MusicService.class );
-        stopIntent.setAction(MusicService.ACTION_PAUSE);
-        PendingIntent stopPendingIntent = PendingIntent.getService(this ,
-                1 , stopIntent , PendingIntent.FLAG_CANCEL_CURRENT );
+//
+//        Intent stopIntent = new Intent(this , MusicService.class );
+//        stopIntent.setAction(MusicService.ACTION_PAUSE);
+//        PendingIntent stopPendingIntent = PendingIntent.getService(this ,
+//                1 , stopIntent , PendingIntent.FLAG_CANCEL_CURRENT );
 
         //액션
-        builder.addAction(R.mipmap.ic_launcher , "중지",stopPendingIntent);
-        builder.addAction(R.mipmap.ic_launcher , "다음곡",pendingIntent);
-        builder.addAction(R.mipmap.ic_launcher , "이전곡",pendingIntent);
+//        builder.addAction(R.mipmap.ic_launcher , "중지",stopPendingIntent);
+//        builder.addAction(R.mipmap.ic_launcher , "다음곡",pendingIntent);
+//        builder.addAction(R.mipmap.ic_launcher , "이전곡",pendingIntent);
 
         //알림표시
         startForeground(1 , builder.build());
