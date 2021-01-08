@@ -19,11 +19,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.m2comm.test.R;
 import com.m2comm.test.music.MusicService;
 import com.m2comm.test.music.dtos.MusicUiController;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Locale;
 import java.util.Timer;
@@ -90,7 +94,22 @@ public class PlayerFragment extends Fragment {
                 });
             }
         };
-        mTimer.schedule(mTimerTask,0 ,1000);
+
+        if ( mMusicService.mMediaPlayer.isPlaying() ) {
+            mTimer.schedule(mTimerTask,0 ,1000);
+        }
+    }
+
+    @Subscribe
+    public void stopMediaPlay(Player player) {
+        switch (player.playerEnum) {
+            case A:
+                if ( mTimer != null ) mTimer.cancel();
+                break;
+            case B:
+                this.changeUpdateUI(mMusicService.getCurrentMusicObj());
+                break;
+        }
     }
 
 
@@ -115,6 +134,23 @@ public class PlayerFragment extends Fragment {
         mStartTime = view.findViewById(R.id.music_startTime);
         mEndTime = view.findViewById(R.id.music_endTime);
         mSeekBar = view.findViewById(R.id.music_seekbar);
+
+        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                mMusicService.mMediaPlayer.seekTo(seekBar.getProgress());
+            }
+        });
     }
 
 
@@ -139,6 +175,7 @@ public class PlayerFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        EventBus.getDefault().register(this);
         Intent intent = new Intent(getActivity(), MusicService.class);
         getActivity().bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
@@ -146,6 +183,7 @@ public class PlayerFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+        EventBus.getDefault().unregister(this);
         if (mBound) {
             getActivity().unbindService(mConnection);
             mBound = false;
@@ -153,4 +191,28 @@ public class PlayerFragment extends Fragment {
 
         if ( mTimer != null ) mTimer.cancel();
     }
+
+    public static class Player {
+        PlayerEnum playerEnum;
+
+        public Player(PlayerEnum playerEnum) {
+            this.playerEnum = playerEnum;
+        }
+    }
+
+    public enum PlayerEnum {
+
+        A("update_ui") , B("recycle");
+
+        PlayerEnum(String value){
+            this.value = value;
+        }
+        private final String value;
+
+        public String getValue() {
+            return value;
+        }
+    }
+
+
 }
