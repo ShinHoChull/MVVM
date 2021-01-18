@@ -1,5 +1,6 @@
 package com.m2comm.test.music;
 
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.media.MediaBrowserCompat;
@@ -21,6 +23,7 @@ import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.media.MediaBrowserServiceCompat;
 
@@ -110,14 +113,17 @@ public class MusicService extends Service {
         }
 
         this.mMediaPlayer.prepareAsync();
-        this.showNotification();
     }
 
+    public void hideNotification() {
+        stopForeground(true);
+    }
     /**
     * 백그라운드는 강제 킬 대상이다. ( 메모리 부족으로 인한. )
      * 서비스라도 포그라운드로 올려줘야 앱이 죽지 않음.  startForeground
     * */
-    private void showNotification() {
+    RemoteViews mRemoteViews;
+    public void showNotification() {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, getString(R.string.CHANNEL_DEFAULT_IMPORTANCE));
        // builder.setContentTitle(mPlayingMusicObj.getTitle());
        // builder.setContentText(mPlayingMusicObj.getSingerName());
@@ -129,13 +135,15 @@ public class MusicService extends Service {
                 1 , stopIntent , PendingIntent.FLAG_CANCEL_CURRENT );
 
         //Notification Custom 하기.
-        RemoteViews remoteViews = new RemoteViews(getPackageName() , R.layout.remote_view);
-        remoteViews.setOnClickPendingIntent(R.id.noti_stopBt,stopPendingIntent);
+        mRemoteViews = new RemoteViews(getPackageName() , R.layout.remote_view);
+        mRemoteViews.setOnClickPendingIntent(R.id.noti_stopBt,stopPendingIntent);
+        mRemoteViews.setImageViewBitmap(R.id.img,mPlayingMusicObj.getBitmap());
+        mRemoteViews.setTextViewText(R.id.noti_stopBt,mMediaPlayer.isPlaying() ? "정지" : "재생");
         //아래와 같은식으로 값을 가져와서 수정함.
         //remoteViews.setTextViewText(R.id.notifyLocation, location);
         //remoteViews.setTextViewText(R.id.notifyWeather, "날씨 : " + curWfKor + "," + curTemp);
 
-        builder.setContent(remoteViews);
+        builder.setContent(mRemoteViews);
 
        // Bitmap bitmap = BitmapFactory.decodeResource (
         //           getResources() , R.mipmap.ic_launcher
@@ -153,8 +161,8 @@ public class MusicService extends Service {
         builder.setAutoCancel(true);
 
         // 기본 알림
-        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        builder.setSound(uri);
+//        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+//        builder.setSound(uri);
 
         //진동
         builder.setVibrate(new long[]{100,200,300});
@@ -194,6 +202,7 @@ public class MusicService extends Service {
              * */
             EventBus.getDefault().post(new PlayerFragment.Player(PlayerFragment.PlayerEnum.B));
         }
+
         /**
          * {@link com.m2comm.test.music.fragment.MusicControllerFragment#updateButton(Boolean)}}
          * */

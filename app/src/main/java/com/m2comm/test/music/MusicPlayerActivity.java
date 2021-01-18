@@ -46,6 +46,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_player);
 
@@ -69,6 +70,17 @@ public class MusicPlayerActivity extends AppCompatActivity {
         MusicPlayerPagerAdapter adapter = new MusicPlayerPagerAdapter(getSupportFragmentManager(),0);
         viewPager.setAdapter(adapter);
     }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
 
 
     private class MusicPlayerPagerAdapter extends FragmentPagerAdapter {
@@ -112,6 +124,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
             }
             return null;
         }
+
     }
 
     private void createNotificationChannel() {

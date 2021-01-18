@@ -48,9 +48,16 @@ public class MusicControllerFragment extends Fragment implements View.OnClickLis
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         Intent intent = new Intent(getActivity() , MusicService.class);
         getActivity().bindService(intent , mConnection , Context.BIND_AUTO_CREATE);
+
     }
+
 
     @Override
     public void onStop() {
@@ -59,6 +66,9 @@ public class MusicControllerFragment extends Fragment implements View.OnClickLis
         if (this.mBound) {
             getActivity().unbindService(mConnection);
             this.mBound = false;
+        }
+        if ( mMusicService != null && mMusicService.mMediaPlayer != null && mMusicService.mMediaPlayer.isPlaying() ) {
+            mMusicService.showNotification();
         }
     }
 
@@ -79,6 +89,17 @@ public class MusicControllerFragment extends Fragment implements View.OnClickLis
         if ( mBound ) {
             mPlayButton.setText(this.mMusicService.mMediaPlayer.isPlaying()?"정지" : "재생");
             updateUI(mMusicService.getCurrentMusicObj());
+        }
+    }
+
+    public void callFragment() {
+        if (mBound) {
+            this.updateUI(mMusicService.getCurrentMusicObj());
+
+            //상단 노티 제거
+            if ( mMusicService != null && mMusicService.mMediaPlayer != null && mMusicService.mMediaPlayer.isPlaying() ) {
+                mMusicService.hideNotification();
+            }
         }
     }
 
@@ -105,6 +126,8 @@ public class MusicControllerFragment extends Fragment implements View.OnClickLis
             MusicService.MyBinder binder = (MusicService.MyBinder) service;
             mMusicService = binder.getService();
             mBound = true;
+            callFragment();
+
         }
 
         @Override
@@ -114,9 +137,11 @@ public class MusicControllerFragment extends Fragment implements View.OnClickLis
         }
     };
 
+
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d(TAG , "onDestroy");
     }
 
     @Override

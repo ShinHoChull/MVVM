@@ -6,7 +6,8 @@
     android:background="#6C6206">
 
     <ImageView
-        android:src="@drawable/picture"
+        android:scaleType="centerCrop"
+        android:id="@+id/img"
         android:layout_width="match_parent"
         android:layout_height="150dp"/>
 
@@ -29,7 +30,7 @@
             android:layout_height="wrap_content"/>
         <Button
             android:id="@+id/noti_stopBt"
-            android:text="Hello~ World"
+            android:text="정지"
             android:textSize="10dp"
             android:textColor="#851212"
             android:layout_width="wrap_content"
