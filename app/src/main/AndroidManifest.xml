@@ -14,18 +14,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".settings.SettingsActivity"
-            android:label="@string/title_activity_settings">
+        <activity android:name=".anim.AnimationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".joystick.JoystickMain">
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:label="@string/title_activity_settings">
 
         </activity>
+        <activity android:name=".joystick.JoystickMain"></activity>
         <activity android:name=".toast.CustomDesignActivity" />
 
         <service
@@ -43,7 +44,7 @@
         <activity
             android:name=".memo.MemoDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".memo.MemoActivity"></activity>
+        <activity android:name=".memo.MemoActivity" />
         <activity android:name=".fragments.ViewPagerActivity" />
         <activity android:name=".fragments.ImageFragmentActivity" />
         <activity android:name=".ListViewTraing.ListViewExamActivity" />
