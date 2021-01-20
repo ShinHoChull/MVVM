@@ -2,6 +2,7 @@ package com.m2comm.test.sensor;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -11,7 +12,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 import com.m2comm.test.R;
+import com.m2comm.test.main.MainActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SensorTest extends AppCompatActivity implements SensorEventListener {
 
@@ -20,6 +27,21 @@ public class SensorTest extends AppCompatActivity implements SensorEventListener
     private SensorManager mSensorManager;
     private Sensor mLightSensor;
 
+    PermissionListener permissionlistener = new PermissionListener() {
+        @Override
+        public void onPermissionGranted() {
+            Toast.makeText(SensorTest.this, "Permission Granted", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+            Toast.makeText(SensorTest.this, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+        }
+
+
+
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +49,17 @@ public class SensorTest extends AppCompatActivity implements SensorEventListener
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mLightSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+
+
+
+
         if ( mLightSensor != null ) {
+            TedPermission.with(this)
+                    .setPermissionListener(permissionlistener)
+                    .setDeniedMessage("Hello")
+                    .setPermissions(Manifest.permission.READ_CONTACTS, Manifest.permission.ACCESS_FINE_LOCATION)
+                    .check();
+
 
         } else {
             Toast.makeText(this , "이기기는 조도센서가 없습니다.",Toast.LENGTH_SHORT).show();
