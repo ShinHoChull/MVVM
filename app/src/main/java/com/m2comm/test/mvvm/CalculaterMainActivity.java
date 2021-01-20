@@ -14,23 +14,22 @@ import com.m2comm.test.databinding.ActivityCalculaterMainBinding;
 
 public class CalculaterMainActivity extends AppCompatActivity {
 
-    ActivityCalculaterMainBinding binding;
+    ActivityCalculaterMainBinding mBinding;
     CalculaterViewModel viewModel;
-
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.binding = DataBindingUtil.setContentView(this , R.layout.activity_calculater_main );
-        this.binding.setLifecycleOwner(this);
+        this.mBinding = DataBindingUtil.setContentView(this , R.layout.activity_calculater_main );
+        this.mBinding.setLifecycleOwner(this);
 
         final CalculaterViewModel viewModel = new ViewModelProvider( this ).get(CalculaterViewModel.class);
-        binding.setViewmodel(viewModel);
-
-
+        mBinding.setViewmodel(viewModel);
 
     }
+
+
 
 
 

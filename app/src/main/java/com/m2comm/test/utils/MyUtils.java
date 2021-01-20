@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,10 @@ import android.widget.Toast;
 import com.m2comm.test.R;
 
 public class MyUtils {
+
+    public static int sum(int a , int b) {
+        return a + b;
+    }
 
     public static String getRealPath (Context context , Uri uri ) {
         String strDocId = DocumentsContract.getDocumentId(uri);
@@ -28,6 +33,7 @@ public class MyUtils {
                 null
         );
         crsCursor.moveToFirst();
+
 
         return crsCursor.getString(0);
     }

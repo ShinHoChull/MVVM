@@ -14,21 +14,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".joystick.JoystickMain">
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:label="@string/title_activity_settings">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".toast.CustomDesignActivity"></activity>
+        <activity android:name=".joystick.JoystickMain">
+
+        </activity>
+        <activity android:name=".toast.CustomDesignActivity" />
 
         <service
             android:name=".music.MusicService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".music.MusicPlayerActivity"></activity>
+        <activity android:name=".music.MusicPlayerActivity" />
         <activity
             android:name=".coordinatorlayout.ScrollingActivity"
             android:label="@string/title_activity_scrolling"
@@ -38,9 +43,7 @@
         <activity
             android:name=".memo.MemoDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".memo.MemoActivity">
-
-        </activity>
+        <activity android:name=".memo.MemoActivity"></activity>
         <activity android:name=".fragments.ViewPagerActivity" />
         <activity android:name=".fragments.ImageFragmentActivity" />
         <activity android:name=".ListViewTraing.ListViewExamActivity" />
