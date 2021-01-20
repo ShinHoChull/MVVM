@@ -51,15 +51,13 @@ public class SensorTest extends AppCompatActivity implements SensorEventListener
         mLightSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
 
 
-
-
         if ( mLightSensor != null ) {
             TedPermission.with(this)
                     .setPermissionListener(permissionlistener)
-                    .setDeniedMessage("Hello")
-                    .setPermissions(Manifest.permission.READ_CONTACTS, Manifest.permission.ACCESS_FINE_LOCATION)
+                    .setRationaleMessage("이기능은 외부 저장소에 접근 하지않으면 안됨.")
+                    .setDeniedMessage("설정 메뉴에서 권한은 변경할 수 있음.")
+                    .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE)
                     .check();
-
 
         } else {
             Toast.makeText(this , "이기기는 조도센서가 없습니다.",Toast.LENGTH_SHORT).show();
