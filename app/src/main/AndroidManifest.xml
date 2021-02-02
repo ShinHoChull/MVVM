@@ -14,19 +14,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".sensor.SensorTest">
+        <activity android:name=".roomtest.RoomMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".anim.AnimationActivity">
+        <activity android:name=".sensor.SensorTest">
 
         </activity>
+        <activity android:name=".anim.AnimationActivity"></activity>
         <activity
             android:name=".settings.SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings" />
         <activity android:name=".joystick.JoystickMain" />
         <activity android:name=".toast.CustomDesignActivity" />
 

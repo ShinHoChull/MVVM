@@ -14,15 +14,38 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildTypes {
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
+//    signingConfig {
+//        release {
+//            storeFile file("../keystore/.jks") // 키스토어 위치
+//            storePassword _storePassword
+//            keyAlias _keyAlias
+//            keyPassword _keyPassword
+//        }
+//    }
+
+//    buildTypes {
+//        release {
+//            signingConfig signingConfigs.release //여기
+//            zipAlignEnabled true //zipAlign 하면서 용량이 줄어든다
+//            shrinkResources true //미사용 리소스 제거
+//            minifyEnabled true // 난독화 .
+//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//        }
+//    }
 
     dataBinding {
         enabled = true
+    }
+
+    // 난독화 ( minifyEnabled )를 키게되면 작은 오류도 다잡아서 빌드가 안되는데
+    //일단 무시되는? 설정
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
 }
@@ -31,7 +54,9 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'androidx.preference:preference:1.1.1'
+    implementation 'androidx.room:room-runtime:2.2.6'
     androidTestImplementation 'androidx.test:rules:1.3.1-alpha03'
+    annotationProcessor 'androidx.room:room-compiler:2.2.6'
     def lifecycle_version = "2.2.0"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.android.support:design:29.1.0'
