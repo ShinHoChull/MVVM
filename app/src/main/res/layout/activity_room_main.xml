@@ -1,40 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".roomtest.RoomMainActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <EditText
-        android:id="@+id/todo_edit"
-        android:layout_width="0dp"
-        android:layout_height="44dp"
-        android:layout_marginStart="10dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="할일"
-        app:layout_constraintEnd_toStartOf="@+id/button"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="1dp" />
+    <data>
+        <variable
+            name="viewModel"
+            type="com.m2comm.test.roomtest.RoomMainViewModel" />
+    </data>
 
-    <Button
-        android:id="@+id/todo_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="추가"
-        app:layout_constraintStart_toEndOf="@+id/todo_edit"
-        tools:layout_editor_absoluteY="2dp" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".roomtest.RoomMainActivity">
 
-    <TextView
-        android:id="@+id/result_text"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        <EditText
+            android:id="@+id/todo_edit"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="10dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="할일"
+            android:text="@={viewModel.mNewTodo}"
+            app:layout_constraintEnd_toStartOf="@+id/button"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="1dp" />
 
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/todo_edit" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/todo_button"
+            android:onClick="@{()->viewModel.insert(viewModel.mNewTodo)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="추가"
+            app:layout_constraintStart_toEndOf="@+id/todo_edit"
+            tools:layout_editor_absoluteY="2dp" />
+
+        <TextView
+            android:id="@+id/result_text"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="@{viewModel.mTodos.toString()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/todo_edit" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
