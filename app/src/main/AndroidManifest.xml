@@ -14,17 +14,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".roomtest.RoomMainActivity">
+        <activity android:name=".navigation.NavigationMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".sensor.SensorTest">
+        <activity android:name=".roomtest.RoomMainActivity">
 
         </activity>
-        <activity android:name=".anim.AnimationActivity"></activity>
+        <activity android:name=".sensor.SensorTest"></activity>
+        <activity android:name=".anim.AnimationActivity" />
         <activity
             android:name=".settings.SettingsActivity"
             android:label="@string/title_activity_settings" />
