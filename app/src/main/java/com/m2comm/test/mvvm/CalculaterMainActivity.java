@@ -24,7 +24,9 @@ public class CalculaterMainActivity extends AppCompatActivity {
         this.mBinding = DataBindingUtil.setContentView(this , R.layout.activity_calculater_main );
         this.mBinding.setLifecycleOwner(this);
 
-        final CalculaterViewModel viewModel = new ViewModelProvider( this ).get(CalculaterViewModel.class);
+        final CalculaterViewModel viewModel = new ViewModelProvider( this )
+                .get(CalculaterViewModel.class);
+
         mBinding.setViewmodel(viewModel);
 
     }

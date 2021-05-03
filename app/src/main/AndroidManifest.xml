@@ -14,17 +14,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".navigation.NavigationMainActivity">
+        <activity android:name=".clone_test.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".roomtest.RoomMainActivity">
+        <activity android:name=".roomtest.addr.AddrActivity">
 
         </activity>
-        <activity android:name=".sensor.SensorTest"></activity>
+        <activity android:name=".navigation.NavigationMainActivity" />
+        <activity android:name=".roomtest.RoomMainActivity" />
+        <activity android:name=".sensor.SensorTest" />
         <activity android:name=".anim.AnimationActivity" />
         <activity
             android:name=".settings.SettingsActivity"
@@ -42,7 +44,7 @@
             android:name=".coordinatorlayout.ScrollingActivity"
             android:label="@string/title_activity_scrolling"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".recyclerview.RecyclerViewActivity" />
+        <activity android:name=".recyclerview.RecyclerViewActivity"></activity>
         <activity android:name=".provider.GalleryActivity" />
         <activity
             android:name=".memo.MemoDetailActivity"
