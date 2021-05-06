@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.m2comm.test">
+    package="com.m2comm.test" >
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
@@ -13,16 +13,17 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".clone_test.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".roomtest.basecode.RoomBaseCode"
+            android:label="@string/title_activity_room_base_code"
+            android:theme="@style/AppTheme.NoActionBar" >
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
-        <activity android:name=".roomtest.addr.AddrActivity">
+        <activity android:name=".clone_test.MainActivity" >
 
+        </activity>
+        <activity android:name=".roomtest.addr.AddrActivity" >
         </activity>
         <activity android:name=".navigation.NavigationMainActivity" />
         <activity android:name=".roomtest.RoomMainActivity" />
@@ -44,7 +45,15 @@
             android:name=".coordinatorlayout.ScrollingActivity"
             android:label="@string/title_activity_scrolling"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".recyclerview.RecyclerViewActivity"></activity>
+
+        <activity android:name=".recyclerview.RecyclerViewActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".provider.GalleryActivity" />
         <activity
             android:name=".memo.MemoDetailActivity"
