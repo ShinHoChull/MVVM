@@ -34,11 +34,9 @@ public class SensorTest extends AppCompatActivity implements SensorEventListener
         }
 
         @Override
-        public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+        public void onPermissionDenied(List<String> deniedPermissions) {
             Toast.makeText(SensorTest.this, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
         }
-
-
 
     };
 
