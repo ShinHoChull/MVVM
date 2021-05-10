@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.m2comm.test.R;
 
@@ -27,6 +29,8 @@ public class RxTestActivity extends AppCompatActivity {
     ArrayList<Integer> lists = new ArrayList<Integer>();
     private String TAG = RxTestActivity.class.getSimpleName();
 
+    private Button mBt1;
+    private Button mBt2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +95,24 @@ public class RxTestActivity extends AppCompatActivity {
             }
         });
 
+        init();
+        initListener();
+    }
+
+    private void initListener() {
+
+        mBt1.setOnClickListener(it->{
+            throw new RuntimeException("Test Crash");
+        });
+
+        mBt2.setOnClickListener(it->{
+
+        });
+    }
+
+    private void init() {
+        mBt1 = findViewById(R.id.rx_button);
+        mBt2 = findViewById(R.id.rx_button2);
     }
 
 
