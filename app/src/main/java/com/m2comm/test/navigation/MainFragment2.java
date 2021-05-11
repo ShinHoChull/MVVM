@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,8 +54,30 @@ public class MainFragment2 extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String title = MainFragment2Args.fromBundle(getArguments()).getTitle();
-        TextView tv = view.findViewById(R.id.frag_textView);
-        tv.setText(title);
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.e("DDDDDDDDDD","fragment2->onStart");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e("DDDDDDDDDD","fragment2->onResume");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.e("DDDDDDDDDD","fragment2->onStop");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.e("DDDDDDDDDD","fragment2->onDestroy");
     }
 }

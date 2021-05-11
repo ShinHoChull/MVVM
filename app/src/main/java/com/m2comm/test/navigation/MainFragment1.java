@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,18 +49,42 @@ public class MainFragment1 extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        MainFragment1Directions.ActionMainFragment1ToMainFragment2 action =
-                MainFragment1Directions.actionMainFragment1ToMainFragment2("Hello");
-
         Button bt = view.findViewById(R.id.frag_button1);
         bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Navigation.findNavController(v)
-                        .navigate(action);
+                        .navigate(R.id.action_mainFragment12_to_mainFragment22);
             }
         });
 
+        Button bt2 = view.findViewById(R.id.frag_button2);
+        bt2.setOnClickListener(v->{
+            //Navigation.findNavController(v).navigate(R.id.action_mainFragment1_to_include_nav12);
+        });
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.e("DDDDDDDDDD","fragment1->onStart");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e("DDDDDDDDDD","fragment1->onResume");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.e("DDDDDDDDDD","fragment1->onStop");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.e("DDDDDDDDDD","fragment1->onDestroy");
     }
 }

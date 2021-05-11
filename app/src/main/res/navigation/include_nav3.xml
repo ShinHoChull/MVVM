@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/include_nav3"
+    app:startDestination="@id/depth3Fragment">
+
+    <fragment
+        android:id="@+id/depth3Fragment"
+        android:name="com.m2comm.test.navigation.Depth3Fragment"
+        android:label="fragment_depth3"
+        tools:layout="@layout/fragment_depth3" />
+</navigation>

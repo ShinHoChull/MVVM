@@ -94,3 +94,10 @@
     @org.greenrobot.eventbus.Subscribe <methods>;
 }
 ##---------------------
+
+
+##--------------Crashlytics 난독화 된 오류 받기
+-keepattributes SourceFile,LineNumberTable        # Keep file names and line numbers.
+-keep public class * extends java.lang.Exception  # Optional: Keep custom exceptions.
+##-----------------------
+
