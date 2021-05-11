@@ -64,6 +64,14 @@ public class MainFragment1 extends Fragment {
         });
     }
 
+    private void init() {
+
+    }
+
+    public int numberPlus(int num1 , int num2) {
+        return num1 + num2;
+    }
+
     @Override
     public void onStart() {
         super.onStart();
