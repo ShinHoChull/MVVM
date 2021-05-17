@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.CAMERA"/>
 
 
     <application
@@ -14,24 +15,31 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        >
-        <activity android:name=".rx_test.RxTestActivity">
+        android:theme="@style/AppTheme">
 
-        </activity>
-        <activity
-            android:name=".roomtest.basecode.RoomBaseCode"
-            android:label="@string/title_activity_room_base_code"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".clone_test.MainActivity"></activity>
-        <activity android:name=".roomtest.addr.AddrActivity"></activity>
-        <activity android:name=".navigation.NavigationMainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+        <meta-data
+            android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+            android:value="orc" />
+
+
+        <activity android:name=".ml_kit.MlkitActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".rx_test.RxTestActivity"></activity>
+        <activity
+            android:name=".roomtest.basecode.RoomBaseCode"
+            android:label="@string/title_activity_room_base_code"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".clone_test.MainActivity" />
+        <activity android:name=".roomtest.addr.AddrActivity" />
+        <activity
+            android:name=".navigation.NavigationMainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+
         </activity>
         <activity android:name=".roomtest.RoomMainActivity" />
         <activity android:name=".sensor.SensorTest" />
@@ -52,9 +60,7 @@
             android:name=".coordinatorlayout.ScrollingActivity"
             android:label="@string/title_activity_scrolling"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".recyclerview.RecyclerViewActivity">
-
-        </activity>
+        <activity android:name=".recyclerview.RecyclerViewActivity"></activity>
         <activity android:name=".provider.GalleryActivity" />
         <activity
             android:name=".memo.MemoDetailActivity"

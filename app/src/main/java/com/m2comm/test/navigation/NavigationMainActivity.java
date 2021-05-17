@@ -42,24 +42,24 @@ public class NavigationMainActivity extends AppCompatActivity implements NavCont
 
 
         mBottom = findViewById(R.id.bottom_nav);
-
         mNavController = Navigation.findNavController(this, R.id.nav_host_fragment);
-
         mAppBarConfiguration = new AppBarConfiguration.Builder(mNavController.getGraph()).build();
 
-        mNavController.addOnDestinationChangedListener(this);
 
+        mNavController.addOnDestinationChangedListener(this);
         mBottom.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-                if (item.getItemId() == R.id.mainFragment1) {
-                    mNavController.setGraph(R.navigation.include_nav1);
-                } else if (item.getItemId() == R.id.newLineFragment1) {
-                    mNavController.setGraph(R.navigation.include_nav2);
-                } else if (item.getItemId() == R.id.depth3Fragment) {
-                    mNavController.setGraph(R.navigation.include_nav3);
-                }
+                mNavController.navigate(item.getItemId());
+//                if (item.getItemId() =
+//               = R.id.mainFragment1) {
+//                    mNavController.setGraph(R.navigation.include_nav1);
+//                } else if (item.getItemId() == R.id.newLineFragment1) {
+//                    mNavController.setGraph(R.navigation.include_nav2);
+//                } else if (item.getItemId() == R.id.depth3Fragment) {
+//                    mNavController.setGraph(R.navigation.include_nav3);
+//                }
                 return true;
             }
         });
