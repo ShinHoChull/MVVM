@@ -47,11 +47,13 @@
             />
         <Button
             android:id="@+id/bt3"
-            android:text="프리미엄 섞기"
+            android:text="프리미엄\n섞기"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             />
+
+
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

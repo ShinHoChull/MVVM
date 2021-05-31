@@ -39,5 +39,45 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <LinearLayout
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+
+        <Button
+            android:layout_width="30dp"
+            android:layout_height="28dp"
+            android:text="+"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:background="@drawable/button_top"
+             />
+        <TextView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:textSize="20dp"
+            android:text="0"
+            android:gravity="center"/>
+        <Button
+            android:layout_width="30dp"
+            android:layout_height="28dp"
+            android:text="➖"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="#000000"
+            android:background="@drawable/button_bottom"
+            />
+
+
+
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

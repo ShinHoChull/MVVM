@@ -47,7 +47,7 @@ public class MlkitActivity extends AppCompatActivity implements View.OnClickList
 
     private FirebaseFunctions mFunctions;
 
-    private Button bt1 , bt2 , bt3;
+    private Button bt1 , bt2 , bt3 ;
     private final int TAKE_PICTURE = 999;
     private TextView mText;
 
@@ -69,16 +69,19 @@ public class MlkitActivity extends AppCompatActivity implements View.OnClickList
         bt1.setOnClickListener(this);
         bt2.setOnClickListener(this);
         bt3.setOnClickListener(this);
+
     }
 
     private void btHide() {
         bt1.setVisibility(View.GONE);
         bt3.setVisibility(View.GONE);
+
     }
 
     private void btShow() {
         bt1.setVisibility(View.VISIBLE);
         bt3.setVisibility(View.VISIBLE);
+
     }
 
     // 권한 요청
@@ -125,11 +128,11 @@ public class MlkitActivity extends AppCompatActivity implements View.OnClickList
         bt2 = findViewById(R.id.bt2);
         bt3 = findViewById(R.id.bt3);
 
+
         //사진을 찍기전에는 섞기 버튼을 숨긴다.
         btHide();
 
         mText = findViewById(R.id.lottoText);
-
     }
 
     public void lottoWork(Bitmap bitmap) {
@@ -321,7 +324,6 @@ public class MlkitActivity extends AppCompatActivity implements View.OnClickList
                 //해당 char값이 숫자가 아닐 경우
                 return false;
             }
-
         }
         return true;
     }
@@ -333,8 +335,6 @@ public class MlkitActivity extends AppCompatActivity implements View.OnClickList
         } else if ( v.getId() == R.id.bt2 ) {
             Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(cameraIntent, TAKE_PICTURE);
-
-
         } else if ( v.getId() == R.id.bt3 ) {
             baseChooseNumber();
         }

@@ -23,13 +23,11 @@
 
 
         <activity android:name=".ml_kit.MlkitActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
-        <activity android:name=".rx_test.RxTestActivity"></activity>
+        <activity android:name=".rx_test.RxTestActivity">
+
+        </activity>
         <activity
             android:name=".roomtest.basecode.RoomBaseCode"
             android:label="@string/title_activity_room_base_code"
@@ -60,7 +58,13 @@
             android:name=".coordinatorlayout.ScrollingActivity"
             android:label="@string/title_activity_scrolling"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".recyclerview.RecyclerViewActivity"></activity>
+        <activity android:name=".recyclerview.RecyclerViewActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".provider.GalleryActivity" />
         <activity
             android:name=".memo.MemoDetailActivity"
