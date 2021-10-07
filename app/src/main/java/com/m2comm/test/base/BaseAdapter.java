@@ -24,7 +24,7 @@ public abstract class BaseAdapter<
     int getLayout();
 
 
-    protected abstract B getViewHolder(A binding);
+    protected abstract B bindViewHolder(A binding);
 
 
     @NonNull
@@ -35,6 +35,6 @@ public abstract class BaseAdapter<
                 , getLayout(), parent
                 , false);
 
-        return getViewHolder(binding);
+        return bindViewHolder(binding);
     }
 }
