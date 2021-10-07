@@ -33,6 +33,7 @@
             android:label="@string/title_activity_room_base_code"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".clone_test.MainActivity" />
+
         <activity android:name=".roomtest.addr.AddrActivity" />
         <activity
             android:name=".navigation.NavigationMainActivity"
@@ -46,7 +47,9 @@
             android:name=".settings.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity android:name=".joystick.JoystickMain" />
-        <activity android:name=".toast.CustomDesignActivity" />
+        <activity android:name=".toast.CustomDesignActivity" >
+
+        </activity>
 
         <service
             android:name=".music.MusicService"
@@ -59,11 +62,7 @@
             android:label="@string/title_activity_scrolling"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".recyclerview.RecyclerViewActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".provider.GalleryActivity" />
         <activity
@@ -76,7 +75,13 @@
         <activity android:name=".fragments.ColorFragmentActivity" />
         <activity android:name=".mvvm.ShareVmActivity" />
         <activity android:name=".mvvm.CalculaterMainActivity" />
-        <activity android:name=".main.MainActivity" />
+        <activity android:name=".main.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

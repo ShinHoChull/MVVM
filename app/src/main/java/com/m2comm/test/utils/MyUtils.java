@@ -47,7 +47,7 @@ public class MyUtils {
 
         result.setView(v);
         result.setDuration(duration);
-        result.setGravity(Gravity.CENTER_HORIZONTAL , 0 , -300);
+        result.setGravity(Gravity.CENTER_HORIZONTAL , 0 , 0);
         result.show();
     }
 

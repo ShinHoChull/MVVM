@@ -18,12 +18,12 @@ public class CustomDesignActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom_design);
-
-
     }
 
     @Override
     public void onClick(View v) {
-        MyUtils.showToast(this, "안녕하세요?", Toast.LENGTH_SHORT);
+        MyUtils.showToast(this,
+                "안녕하세요??반갑습니다 저는 신용철 입니다. 안녕하세요??반갑습니다 저는 신용철 입니다. 안녕하세요??반갑습니다 저는 신용철 입니다. ",
+                Toast.LENGTH_SHORT);
     }
 }

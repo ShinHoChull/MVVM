@@ -5,46 +5,44 @@ import androidx.databinding.DataBindingUtil;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.m2comm.test.R;
+import com.m2comm.test.base.BaseActivity;
 import com.m2comm.test.databinding.ActivityMainBinding;
+import com.m2comm.test.databinding.ActivityMainListBinding;
 
-public class MainActivity extends AppCompatActivity implements MainConstants.View , View.OnClickListener {
+import java.util.ArrayList;
 
-    private ActivityMainBinding binding;
+public class MainActivity extends BaseActivity<ActivityMainListBinding> implements MainConstants.View ,
+        View.OnClickListener {
+
     MainConstants.Presenter mainPresenter;
+    MainAdapter mMainAdapter;
 
+    @Override
+    protected int getLayout() {
+        return R.layout.activity_main_list;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         this.mainPresenter = new MainPresenter(this);
-        this.init();
-    }
-
-    private void objReg() {
-        this.binding.bt0.setOnClickListener(this);
-        this.binding.bt1.setOnClickListener(this);
-        this.binding.bt2.setOnClickListener(this);
-        this.binding.bt3.setOnClickListener(this);
-        this.binding.bt4.setOnClickListener(this);
-        this.binding.bt5.setOnClickListener(this);
-        this.binding.bt6.setOnClickListener(this);
-        this.binding.bt7.setOnClickListener(this);
-        this.binding.bt8.setOnClickListener(this);
-        this.binding.bt9.setOnClickListener(this);
-
-        this.binding.plusBt.setOnClickListener(this);
-        this.binding.minusBt.setOnClickListener(this);
-
+        this.setUpListener();
 
     }
 
-    private void init() {
-        this.objReg();
+    private void setUpListener() {
 
+        ArrayList<String> arr = new ArrayList<>();
+        arr.add("hello1");
+        arr.add("hello2");
+        arr.add("hello3");
+
+        mMainAdapter = new MainAdapter(arr);
+        mBinding.list.setAdapter(mMainAdapter);
     }
 
 
@@ -57,31 +55,7 @@ public class MainActivity extends AppCompatActivity implements MainConstants.Vie
     public void onClick(View v) {
         switch (v.getId()) {
 
-            case R.id.plusBt:
 
-                //this.mainPresenter.plus();
-                break;
-
-            case R.id.bt0:
-                break;
-            case R.id.bt1:
-                break;
-            case R.id.bt2:
-                break;
-            case R.id.bt3:
-                break;
-            case R.id.bt4:
-                break;
-            case R.id.bt5:
-                break;
-            case R.id.bt6:
-                break;
-            case R.id.bt7:
-                break;
-            case R.id.bt8:
-                break;
-            case R.id.bt9:
-                break;
         }
     }
 }
