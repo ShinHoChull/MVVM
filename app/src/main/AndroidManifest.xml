@@ -2,12 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.m2comm.test">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <application
         android:allowBackup="true"
@@ -16,30 +17,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".car_service.SecondActivity"
+            android:exported="true" />
+        <activity
+            android:name=".car_service.MainActivity"
+            android:exported="true" />
 
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="orc" />
 
-
-        <activity android:name=".ml_kit.MlkitActivity">
-
-        </activity>
-        <activity android:name=".rx_test.RxTestActivity">
-
-        </activity>
+        <activity android:name=".ml_kit.MlkitActivity" />
+        <activity android:name=".rx_test.RxTestActivity" />
         <activity
             android:name=".roomtest.basecode.RoomBaseCode"
             android:label="@string/title_activity_room_base_code"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".clone_test.MainActivity" />
-
         <activity android:name=".roomtest.addr.AddrActivity" />
         <activity
             android:name=".navigation.NavigationMainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".roomtest.RoomMainActivity" />
         <activity android:name=".sensor.SensorTest" />
         <activity android:name=".anim.AnimationActivity" />
@@ -47,9 +46,7 @@
             android:name=".settings.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity android:name=".joystick.JoystickMain" />
-        <activity android:name=".toast.CustomDesignActivity" >
-
-        </activity>
+        <activity android:name=".toast.CustomDesignActivity" />
 
         <service
             android:name=".music.MusicService"
@@ -61,9 +58,7 @@
             android:name=".coordinatorlayout.ScrollingActivity"
             android:label="@string/title_activity_scrolling"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".recyclerview.RecyclerViewActivity">
-
-        </activity>
+        <activity android:name=".recyclerview.RecyclerViewActivity" />
         <activity android:name=".provider.GalleryActivity" />
         <activity
             android:name=".memo.MemoDetailActivity"
@@ -75,6 +70,7 @@
         <activity android:name=".fragments.ColorFragmentActivity" />
         <activity android:name=".mvvm.ShareVmActivity" />
         <activity android:name=".mvvm.CalculaterMainActivity" />
+
         <activity android:name=".main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -82,6 +78,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".car_service.MyService"
+            android:exported="false"
+            android:foregroundServiceType="location">
+            <intent-filter>
+                <action android:name="com.m2comm.test.car_service.MyService" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

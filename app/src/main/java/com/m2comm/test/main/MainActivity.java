@@ -1,5 +1,6 @@
 package com.m2comm.test.main;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,8 +33,22 @@ public class MainActivity extends BaseActivity<ActivityMainListBinding> implemen
 
     MainConstants.Presenter mainPresenter;
     MainAdapter mMainAdapter;
-
+    private int saveNum = -1;
     ArrayList<Study> arr;
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.e("onSave1=>", "save1");
+        outState.putInt("saveNum",1);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.e("onSave2=>", "save2");
+        this.saveNum = savedInstanceState.getInt("saveNum");
+    }
 
     @Override
     protected int getLayout() {
@@ -44,6 +59,12 @@ public class MainActivity extends BaseActivity<ActivityMainListBinding> implemen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (savedInstanceState != null) {
+            this.saveNum = savedInstanceState.getInt("saveNum");
+        }  else {
+            Log.e("onSave3=>", "savedInstanceState Null");
+        }
+
         this.mainPresenter = new MainPresenter(this);
         this.setUpData();
         this.setUpList();
@@ -52,7 +73,7 @@ public class MainActivity extends BaseActivity<ActivityMainListBinding> implemen
     private void setUpData() {
         arr = new ArrayList<>();
 
-
+        arr.add(new Study("carService", com.m2comm.test.car_service.MainActivity.class));
         arr.add(new Study("LottoProgram", MlkitActivity.class));
         arr.add(new Study("CustomToast", CustomDesignActivity.class));
         arr.add(new Study("memo",MemoActivity.class));
